@@ -12,8 +12,9 @@
 namespace CachetHQ\Cachet\Http\Controllers\Api;
 
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionCommand;
+use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionInstanceCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionCommand;
-use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionInstanceCommand;
+use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionCommand;
 use CachetHQ\Cachet\Models\TimedAction;
 use CachetHQ\Cachet\Models\TimedActionInstance;
 use GrahamCampbell\Binput\Facades\Binput;
@@ -62,6 +63,13 @@ class ActionController extends AbstractApiController
         return $this->item($action);
     }
 
+    /**
+     * Get all action instances.
+     *
+     * @param \CachetHQ\Cachet\Models\TimedAction $action
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getActionInstances(TimedAction $action)
     {
         $instances = $action->instances();
@@ -105,7 +113,8 @@ class ActionController extends AbstractApiController
                 Binput::get('timezone', null),
                 Binput::get('schedule_frequency'),
                 Binput::get('completion_latency'),
-                Binput::get('start_at')
+                Binput::get('start_at'),
+                Binput::get('timed_action_group_id')
             ));
         } catch (QueryException $e) {
             throw new BadRequestHttpException($e);
@@ -152,40 +161,13 @@ class ActionController extends AbstractApiController
                 Binput::get('name'),
                 Binput::get('description', null),
                 Binput::get('active', false),
-                Binput::get('timezone', null),
-                Binput::get('schedule_frequency'),
-                Binput::get('completion_latency'),
-                Binput::get('start_at')
+                Binput::get('timed_action_group_id')
             ));
         } catch (QueryException $e) {
             throw new BadRequestHttpException($e);
         }
 
         return $this->item($action);
-    }
-
-    /**
-     * Update a timed action instance.
-     *
-     * @param \CachetHQ\Cachet\Models\TimedAction         $action
-     * @param \CachetHQ\Cachet\Models\TimedActionInstance $instance
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function putInstance(TimedAction $action, TimedActionInstance $instance)
-    {
-        try {
-            $instance = dispatch(new UpdateTimedActionInstanceCommand(
-                $instance,
-                Binput::get('message', null),
-                Binput::get('started_at'),
-                Binput::get('completed_at', null)
-            ));
-        } catch (QueryException $e) {
-            throw new BadRequestHttpException($e);
-        }
-
-        return $this->item($instance);
     }
 
     /**
@@ -198,21 +180,6 @@ class ActionController extends AbstractApiController
     public function deleteAction(TimedAction $action)
     {
         dispatch(new DeleteTimedActionCommand($action));
-
-        return $this->noContent();
-    }
-
-    /**
-     * Delete a timed action instance.
-     *
-     * @param \CachetHQ\Cachet\Models\TimedAction         $action
-     * @param \CachetHQ\Cachet\Models\TimedActionInstance $instance
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function deleteInstance(TimedAction $action, TimedActionInstance $instance)
-    {
-        dispatch(new DeleteTimedActionInstanceCommand($instance));
 
         return $this->noContent();
     }

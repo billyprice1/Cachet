@@ -34,7 +34,7 @@ class TimedActionInstancePresenter extends BasePresenter implements Arrayable
     {
         $action = $this->wrappedObject->action;
 
-        $actionStartDate = app(DateFactory::class)->make($action->start_at)->setTimezone($this->wrappedObject->timezone);
+        $actionStartDate = app(DateFactory::class)->make($action->created_at)->setTimezone($this->wrappedObject->timezone);
         $nowDate = app(DateFactory::class)->make();
 
         return $date->toDateTimeString();

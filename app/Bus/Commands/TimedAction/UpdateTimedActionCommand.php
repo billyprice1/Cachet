@@ -12,7 +12,6 @@
 namespace CachetHQ\Cachet\Bus\Commands\TimedAction;
 
 use CachetHQ\Cachet\Models\TimedAction;
-use CachetHQ\Cachet\Models\TimedActionGroup;
 
 /**
  * This is the update timed action command class.
@@ -50,56 +49,29 @@ final class UpdateTimedActionCommand
     public $active;
 
     /**
-     * The timezone of the action.
-     *
-     * @var string
-     */
-    public $timezone;
-
-    /**
-     * The frequencey in which the timed action should run at.
-     *
-     * @var int
-     */
-    public $schedule_frequency;
-
-    /**
-     * How often the action should be completed.
-     *
-     * @var int
-     */
-    public $completion_latency;
-
-    /**
      * The group in which to place the timed action.
      *
-     * @var \CachetHQ\Cachet\Models\TimedActionGroup|null
+     * @var int|null
      */
-    public $group;
+    public $timed_action_group_id;
 
     /**
      * Create a new update timed action command instance.
      *
-     * @param \CachetHQ\Cachet\Models\TimedAction           $action
-     * @param string                                        $name
-     * @param string                                        $description
-     * @param bool                                          $active
-     * @param string                                        $timezone
-     * @param int                                           $schedule_frequency
-     * @param int                                           $completion_latency
-     * @param \CachetHQ\Cachet\Models\TimedActionGroup|null $group
+     * @param \CachetHQ\Cachet\Models\TimedAction $action
+     * @param string                              $name
+     * @param string                              $description
+     * @param bool                                $active
+     * @param int|null                            $timed_action_group_id
      *
      * @return void
      */
-    public function __construct(TimedAction $action, $name, $description, $active, $timezone, $schedule_frequency, $completion_latency, TimedActionGroup $group = null)
+    public function __construct(TimedAction $action, $name, $description, $active, $timed_action_group_id = null)
     {
         $this->action = $action;
         $this->name = $name;
         $this->description = $description;
         $this->active = $active;
-        $this->timezone = $timezone;
-        $this->schedule_frequency = $schedule_frequency;
-        $this->completion_latency = $completion_latency;
-        $this->group = $group;
+        $this->timed_action_group_id = $timed_action_group_id;
     }
 }

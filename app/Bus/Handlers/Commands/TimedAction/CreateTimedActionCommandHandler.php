@@ -32,13 +32,13 @@ class CreateTimedActionCommandHandler
     public function handle(CreateTimedActionCommand $command)
     {
         $timedAction = TimedAction::create([
-            'name'               => $command->name,
-            'description'        => $command->description,
-            'active'             => $command->active,
-            'timezone'           => $command->timezone,
-            'schedule_frequency' => $command->schedule_frequency,
-            'completion_latency' => $command->completion_latency,
-            'group'              => $command->group,
+            'name'                  => $command->name,
+            'description'           => $command->description,
+            'active'                => $command->active,
+            'timezone'              => $command->timezone,
+            'schedule_frequency'    => $command->schedule_frequency,
+            'completion_latency'    => $command->completion_latency,
+            'timed_action_group_id' => $command->timed_action_group_id,
         ]);
 
         event(new TimedActionWasAddedEvent($timedAction));

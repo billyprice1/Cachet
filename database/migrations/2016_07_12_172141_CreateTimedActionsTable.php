@@ -25,7 +25,7 @@ class CreateTimedActionsTable extends Migration
         Schema::create('timed_actions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('timed_action_group_id')->unsigned();
+            $table->integer('timed_action_group_id')->unsigned()->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
             $table->boolean('active')->default(false);
             $table->string('timezone');

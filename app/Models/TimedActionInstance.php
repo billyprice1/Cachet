@@ -14,14 +14,13 @@ namespace CachetHQ\Cachet\Models;
 use AltThree\Validator\ValidatingTrait;
 use CachetHQ\Cachet\Models\Traits\SortableTrait;
 use Illuminate\Database\Eloquent\Model;
-use McCool\LaravelAutoPresenter\HasPresenter;
 
 /**
  * This is the timed action instance model.
  *
  * @author James Brooks <james@alt-three.com>
  */
-class TimedActionInstance extends Model implements HasPresenter
+class TimedActionInstance extends Model
 {
     use SortableTrait, ValidatingTrait;
 
@@ -82,15 +81,5 @@ class TimedActionInstance extends Model implements HasPresenter
     public function action()
     {
         return $this->belongsTo(TimedAction::class);
-    }
-
-    /**
-     * Get the presenter class.
-     *
-     * @return string
-     */
-    public function getPresenterClass()
-    {
-        return self::class;
     }
 }

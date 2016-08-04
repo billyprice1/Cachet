@@ -68,13 +68,13 @@ class TimedAction extends Model implements HasPresenter
      * @var string[]
      */
     public $rules = [
-        'timed_action_group_id' => 'int',
         'name'                  => 'string|required',
+        'timed_action_group_id' => 'int',
         'description'           => 'string',
         'active'                => 'bool',
-        'timezone'              => 'string',
-        'schedule_frequency'    => 'int',
-        'completion_latency'    => 'int',
+        'timezone'              => 'string|required',
+        'schedule_frequency'    => 'int|required',
+        'completion_latency'    => 'int|required',
     ];
 
     /**
@@ -121,7 +121,7 @@ class TimedAction extends Model implements HasPresenter
      */
     public function instances()
     {
-        return $this->hasMany(TimedActionInstance::class, 'timed_action_id', 'id');
+        return $this->hasMany(TimedActionInstance::class);
     }
 
     /**

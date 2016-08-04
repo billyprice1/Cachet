@@ -11,6 +11,8 @@
 
 namespace CachetHQ\Cachet\Bus\Handlers\Commands\TimedAction;
 
+use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionCommand;
+
 /**
  * This is the update timed action command handler class.
  *
@@ -27,7 +29,9 @@ class UpdateTimedActionCommandHandler
      */
     public function handle(UpdateTimedActionCommand $command)
     {
-        $action = $command->action->update($this->filter($command));
+        $action = $command->action;
+
+        $action->update($this->filter($command));
 
         return $action;
     }
@@ -42,10 +46,10 @@ class UpdateTimedActionCommandHandler
     protected function filter(UpdateTimedActionCommand $command)
     {
         $params = [
-            'name'        => $command->name,
-            'description' => $command->description,
-            'active'      => $command->active,
-            'group'       => $command->group,
+            'name'                  => $command->name,
+            'description'           => $command->description,
+            'active'                => $command->active,
+            'timed_action_group_id' => $command->timed_action_group_id,
         ];
 
         return array_filter($params, function ($val) {
