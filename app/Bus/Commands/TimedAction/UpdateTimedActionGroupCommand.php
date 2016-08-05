@@ -53,5 +53,7 @@ final class UpdateTimedActionGroupCommand
     public function __construct(TimedActionGroup $group, $name = null, $order = null)
     {
         $this->group = $group;
+        $this->name = $name;
+        $this->order = $order;
     }
 }

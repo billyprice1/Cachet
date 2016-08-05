@@ -11,12 +11,14 @@
 
 namespace CachetHQ\Cachet\Bus\Handlers\Commands\TimedAction;
 
+use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionGroupCommand;
+
 /**
  * This is the update timed group command handler class.
  *
  * @author James Brooks <james@alt-three.com>
  */
-class UpateTimedActionGroupCommandHandler
+class UpdateTimedActionGroupCommandHandler
 {
     /**
      * Handle the update timed group command.
@@ -27,7 +29,9 @@ class UpateTimedActionGroupCommandHandler
      */
     public function handle(UpdateTimedActionGroupCommand $command)
     {
-        $group = $command->group->update($this->filter($command));
+        $group = $command->group;
+
+        $group->update($this->filter($command));
 
         return $group;
     }

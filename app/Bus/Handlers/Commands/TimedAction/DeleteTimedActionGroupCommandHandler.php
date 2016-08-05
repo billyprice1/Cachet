@@ -11,6 +11,8 @@
 
 namespace CachetHQ\Cachet\Bus\Handlers\Commands\TimedAction;
 
+use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionGroupCommand;
+
 /**
  * This is the delete timed action group command handler class.
  *
@@ -27,6 +29,16 @@ class DeleteTimedActionGroupCommandHandler
      */
     public function handle(DeleteTimedActionGroupCommand $command)
     {
-        $command->group->delete();
+        $group = $command->group;
+
+        // For every action in the group, set the group_id to 0.
+        $group->actions->map(function ($action) {
+            $action->update([
+                'group_id' => 0,
+            ]);
+        });
+
+        // Delete the group.
+        $group->delete();
     }
 }

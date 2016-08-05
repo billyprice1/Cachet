@@ -97,6 +97,20 @@ return [
         ],
     ],
 
+    // Action form fields
+    'actions' => [
+        'name'               => 'Name',
+        'description'        => 'Description',
+        'timezone'           => 'Timezone',
+        'schedule_frequency' => 'Schedule frequency (in seconds)',
+        'completion_latency' => 'Completion latency (in seconds)',
+        'group'              => 'Group',
+        'active'             => 'Active?',
+        'groups'             => [
+            'name' => 'Group Name',
+        ],
+    ],
+
     // Metric form fields
     'metrics' => [
         'name'             => 'Name',

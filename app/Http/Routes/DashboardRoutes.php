@@ -162,6 +162,43 @@ class DashboardRoutes
                     $router->post('{metric}/edit', 'MetricController@editMetricAction');
                 });
 
+                $router->group(['as' => 'actions.', 'prefix' => 'actions'], function (Registrar $router) {
+                    $router->get('/', [
+                        'as'   => 'index',
+                        'uses' => 'ActionController@showActions',
+                    ]);
+                    $router->get('add', [
+                        'as'   => 'add',
+                        'uses' => 'ActionController@showAddAction',
+                    ]);
+                    $router->post('add', 'ActionController@createAction');
+
+                    $router->group(['prefix' => 'groups', 'as' => 'groups.'], function (Registrar $router) {
+                        $router->get('/', [
+                            'as'   => 'index',
+                            'uses' => 'ActionController@showActionGroups',
+                        ]);
+                        $router->get('add', [
+                            'as'   => 'add',
+                            'uses' => 'ActionController@showAddActionGroup',
+                        ]);
+                        $router->get('{timed_action_group}/edit', [
+                            'as'   => 'edit',
+                            'uses' => 'ActionController@showEditActionGroup',
+                        ]);
+                        $router->post('add', 'ActionController@createActionGroup');
+                        $router->post('{timed_action_group}/edit', 'ActionController@handleEditActionGroup');
+                        $router->delete('{timed_action_group}/delete', 'ActionController@deleteGroupAction');
+                    });
+
+                    $router->delete('{timed_action}/delete', 'ActionController@deleteAction');
+                    $router->get('{timed_action}/edit', [
+                        'as'   => 'edit',
+                        'uses' => 'ActionController@showEditAction',
+                    ]);
+                    $router->post('{timed_action}/edit', 'ActionController@handleEditAction');
+                });
+
                 $router->group(['as' => 'team.', 'prefix' => 'team'], function (Registrar $router) {
                     $router->get('/', [
                         'as'   => 'index',
