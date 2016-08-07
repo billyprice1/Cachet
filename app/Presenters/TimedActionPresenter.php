@@ -27,19 +27,6 @@ class TimedActionPresenter extends BasePresenter implements Arrayable
     use TimestampsTrait;
 
     /**
-     * Calculate the next schedule time, using the timezone and schedule frequency.
-     *
-     * @return string
-     */
-    public function next_schedule_time()
-    {
-        $date = app(DateFactory::class)->make($this->wrappedObject->start_at)->setTimezone($this->wrappedObject->timezone);
-        $date->add(new DateInterval('PT'.$this->wrappedObject->schedule_frequency.'S'));
-
-        return $date->toDateTimeString();
-    }
-
-    /**
      * Get the group name.
      *
      * @return string|null
@@ -57,10 +44,9 @@ class TimedActionPresenter extends BasePresenter implements Arrayable
     public function toArray()
     {
         return array_merge($this->wrappedObject->toArray(), [
-            'group_name'         => $this->group_name(),
-            'next_schedule_time' => $this->next_schedule_time(),
-            'created_at'         => $this->created_at(),
-            'updated_at'         => $this->updated_at(),
+            'group_name' => $this->group_name(),
+            'created_at' => $this->created_at(),
+            'updated_at' => $this->updated_at(),
         ]);
     }
 }
