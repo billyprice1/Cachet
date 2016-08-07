@@ -22,6 +22,25 @@ use CachetHQ\Cachet\Models\TimedAction as TimedActionModel;
 class TimedAction implements TimedActionContract
 {
     /**
+     * The date factory instance.
+     *
+     * @var \CachetHQ\Cachet\Dates\DateFactory
+     */
+    protected $dates;
+
+    /**
+     * Create a new timed action instance.
+     *
+     * @param \CachetHQ\Cachet\Dates\DateFactory $dates
+     *
+     * @return void
+     */
+    public function __construct(DateFactory $dates)
+    {
+        $this->dates = $dates;
+    }
+
+    /**
      * Get the current instance.
      *
      * @param \CachetHQ\Cachet\Integrations\Contracts\TimedAction $action
@@ -48,7 +67,7 @@ class TimedAction implements TimedActionContract
      */
     public function previous(TimedActionModel $action)
     {
-        // todo graham
+        return $action->instances()->where('');
     }
 
     /**

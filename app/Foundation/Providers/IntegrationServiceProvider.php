@@ -11,6 +11,7 @@
 
 namespace CachetHQ\Cachet\Foundation\Providers;
 
+use CachetHQ\Cachet\Dates\DateFactory;
 use CachetHQ\Cachet\Integrations\Contracts\Beacon as BeaconContract;
 use CachetHQ\Cachet\Integrations\Contracts\Credits as CreditsContract;
 use CachetHQ\Cachet\Integrations\Contracts\Feed as FeedContract;
@@ -111,7 +112,9 @@ class IntegrationServiceProvider extends ServiceProvider
     protected function registerTimedAction()
     {
         $this->app->singleton(TimedActionContract::class, function (Container $app) {
-            return new TimedAction();
+            $dates = app()->make(DateFactory::class);
+
+            return new TimedAction($dates);
         });
     }
 
