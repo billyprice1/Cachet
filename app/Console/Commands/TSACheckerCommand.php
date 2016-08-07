@@ -45,6 +45,7 @@ class TSACheckerCommand extends Command
     public function fire()
     {
         foreach (TimedAction::started()->get() as $action) {
+            // todo - filter out actions which have not had time for one whole window to pass yet
             dispatch(new CheckTimedActionCommand($action));
         }
     }
