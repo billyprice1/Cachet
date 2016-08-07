@@ -16,6 +16,7 @@ use AltThree\Validator\ValidationException;
 use CachetHQ\Cachet\Models\Traits\SearchableTrait;
 use CachetHQ\Cachet\Models\Traits\SortableTrait;
 use CachetHQ\Cachet\Presenters\TimedActionPresenter;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -162,6 +163,18 @@ class TimedAction extends Model implements HasPresenter
     public function scopeInactive(Builder $query)
     {
         return $query->where('active', false);
+    }
+
+    /**
+     * Scope timed actions to started.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeStarted(Builder $query)
+    {
+        return $query->where('start_at', '<', Carbon::now());
     }
 
     /**

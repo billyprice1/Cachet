@@ -44,7 +44,7 @@ class TSACheckerCommand extends Command
      */
     public function fire()
     {
-        foreach (TimedAction::all() as $action) {
+        foreach (TimedAction::started()->get() as $action) {
             dispatch(new CheckTimedActionCommand($action));
         }
     }
