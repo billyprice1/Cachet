@@ -101,6 +101,7 @@ return [
     'actions' => [
         'name'               => 'Name',
         'description'        => 'Description',
+        'start_at'           => 'Schedule start time',
         'timezone'           => 'Timezone',
         'schedule_frequency' => 'Schedule frequency (in seconds)',
         'completion_latency' => 'Completion latency (in seconds)',

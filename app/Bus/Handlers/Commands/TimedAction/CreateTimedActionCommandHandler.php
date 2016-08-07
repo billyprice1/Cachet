@@ -13,6 +13,7 @@ namespace CachetHQ\Cachet\Bus\Handlers\Commands\TimedAction;
 
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionCommand;
 use CachetHQ\Cachet\Bus\Events\TimedAction\TimedActionWasAddedEvent;
+use CachetHQ\Cachet\Dates\DateFactory;
 use CachetHQ\Cachet\Models\TimedAction;
 
 /**
@@ -22,6 +23,25 @@ use CachetHQ\Cachet\Models\TimedAction;
  */
 class CreateTimedActionCommandHandler
 {
+    /**
+     * The date factory instance.
+     *
+     * @var \CachetHQ\Cachet\Dates\DateFactory
+     */
+    protected $dates;
+
+    /**
+     * Create a new create timed action command handler instance.
+     *
+     * @param \CachetHQ\Cachet\Dates\DateFactory $dates
+     *
+     * @return void
+     */
+    public function __construct(DateFactory $dates)
+    {
+        $this->dates = $dates;
+    }
+
     /**
      * Handle the create timed action command.
      *
@@ -35,6 +55,7 @@ class CreateTimedActionCommandHandler
             'name'                  => $command->name,
             'description'           => $command->description,
             'active'                => $command->active,
+            'start_at'              => $this->dates->create('d/m/Y H:i', $command->start_at),
             'timezone'              => $command->timezone,
             'schedule_frequency'    => $command->schedule_frequency,
             'completion_latency'    => $command->completion_latency,

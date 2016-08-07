@@ -40,6 +40,13 @@ final class CreateTimedActionCommand
     public $active;
 
     /**
+     * The schedule start time.
+     *
+     * @var string
+     */
+    public $start_at;
+
+    /**
      * The timezone of the action.
      *
      * @var string
@@ -73,6 +80,7 @@ final class CreateTimedActionCommand
      * @param string   $name
      * @param string   $description
      * @param bool     $active
+     * @param string   $start_at
      * @param string   $timezone
      * @param int      $schedule_frequency
      * @param int      $completion_latency
@@ -80,10 +88,11 @@ final class CreateTimedActionCommand
      *
      * @return void
      */
-    public function __construct($name, $description, $active, $timezone, $schedule_frequency, $completion_latency, $timed_action_group_id = null)
+    public function __construct($name, $description, $active, $start_at, $timezone, $schedule_frequency, $completion_latency, $timed_action_group_id = null)
     {
         $this->name = $name;
         $this->description = $description;
+        $this->start_at = $start_at;
         $this->active = $active;
         $this->timezone = $timezone;
         $this->schedule_frequency = $schedule_frequency;

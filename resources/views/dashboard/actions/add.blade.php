@@ -26,6 +26,10 @@
                         <textarea rows="4" class="form-control" name="description" id="action-description" required value="{{ Binput::old('description') }}"></textarea>
                     </div>
                     <div class="form-group">
+                        <label for="action-start_at">{{ trans('forms.actions.start_at') }}</label>
+                        <input type="text" class="form-control" name="start_at" id="action-start_at" required value="{{ Binput::old('start_at') }}" rel="datepicker">
+                    </div>
+                    <div class="form-group">
                         <label>{{ trans('forms.actions.timezone') }}</label>
                         <select name="timezone" class="form-control" required>
                             <option disabled>Select Timezone</option>
