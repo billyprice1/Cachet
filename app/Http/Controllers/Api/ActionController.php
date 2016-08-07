@@ -15,8 +15,10 @@ use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionInstanceCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionCommand;
+use CachetHQ\Cachet\Dates\DateFactory;
 use CachetHQ\Cachet\Models\TimedAction;
 use CachetHQ\Cachet\Models\TimedActionInstance;
+use DateInterval;
 use GrahamCampbell\Binput\Facades\Binput;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Request;
@@ -72,7 +74,33 @@ class ActionController extends AbstractApiController
      */
     public function getActionInstances(TimedAction $action)
     {
-        $instances = $action->instances();
+        // $instances = $action->instances();
+        $perPage = Binput::get('per_page', 20);
+
+        $dateFactory = app()->make(DateFactory::class);
+        $dateFactory->setTimezone($action->timezone);
+
+        $actionDate = $dateFactory->make($action->created_at);
+        $nowDate = $dateFactory->make();
+        $diffSeconds = $nowDate->diffInSeconds($actionDate);
+        $instancesSinceTime = floor($diffSeconds / $action->schedule_frequency);
+        $instances = array_fill($instancesSinceTime - $perPage, $perPage, null);
+
+        foreach ($instances as $instancesAgo => $instance) {
+            $instanceSecondsAgo = $action->schedule_frequency * $instancesAgo;
+            $timeFromInstance = $nowDate->sub(new DateInterval('PT'.$instanceSecondsAgo.'S'));
+            $instance = new TimedActionInstance();
+            $instance->fill([
+                'timed_action_id' => $action->id,
+                'message'         => null,
+                'started_at'      => null,
+                'completed_at'    => null,
+                'created_at'      => $timeFromInstance,
+                'updated_at'      => $timeFromInstance,
+            ]);
+
+            $instances[$instancesAgo] = $instance;
+        }
 
         if ($sortBy = Binput::get('sort')) {
             $direction = Binput::has('order') && Binput::get('order') == 'desc';
