@@ -48,6 +48,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('cachet:beacon')->twiceDaily(0, 12);
 
-        $schedule->command('cachet:tsaigenerator')->everyMinute();
+        $schedule->command('cachet:tsa')->everyMinute();
     }
 }

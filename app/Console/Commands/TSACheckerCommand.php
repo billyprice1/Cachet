@@ -11,28 +11,31 @@
 
 namespace CachetHQ\Cachet\Console\Commands;
 
+use CachetHQ\Cachet\Bus\Commands\TimedAction\CheckTimedActionCommand;
+use CachetHQ\Cachet\Models\TimedAction;
 use Illuminate\Console\Command;
 
 /**
- * This is the time sensitive action instance generator command class.
+ * This is the time sensitive action checker command class.
  *
  * @author James Brooks <james@alt-three.com>
+ * @author Graham Campbell <graham@alt-three.com>
  */
-class TimeSensitiveActionInstanceGeneratorCommand extends Command
+class TSACheckerCommand extends Command
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'cachet:tsaigenerator';
+    protected $name = 'cachet:tsa';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generates time sensitive action instances.';
+    protected $description = 'Checks the time sensitive actions.';
 
     /**
      * Execute the console command.
@@ -41,6 +44,8 @@ class TimeSensitiveActionInstanceGeneratorCommand extends Command
      */
     public function fire()
     {
-        // todo graham
+        foreach (TimedAction::all() as $action) {
+            dispatch(new CheckTimedActionCommand($action));
+        }
     }
 }
