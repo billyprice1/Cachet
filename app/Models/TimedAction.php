@@ -43,7 +43,7 @@ class TimedAction extends Model implements HasPresenter
         'active'                => 'bool',
         'start_at'              => 'date',
         'timezone'              => 'string',
-        'schedule_frequency'    => 'int',
+        'window_length'         => 'int',
         'completion_latency'    => 'int',
         'timed_action_group_id' => 'int',
     ];
@@ -60,7 +60,7 @@ class TimedAction extends Model implements HasPresenter
         'active',
         'start_at',
         'timezone',
-        'schedule_frequency',
+        'window_length',
         'completion_latency',
         'created_at',
         'updated_at',
@@ -78,7 +78,7 @@ class TimedAction extends Model implements HasPresenter
         'description'           => 'string',
         'active'                => 'bool',
         'timezone'              => 'string|required',
-        'schedule_frequency'    => 'int|required',
+        'window_length'         => 'int|required',
         'completion_latency'    => 'int|required',
     ];
 
@@ -94,7 +94,7 @@ class TimedAction extends Model implements HasPresenter
         'active',
         'start_at',
         'timezone',
-        'schedule_frequency',
+        'window_length',
         'completion_latency',
         'created_at',
         'updated_at',
@@ -114,7 +114,7 @@ class TimedAction extends Model implements HasPresenter
         'active',
         'start_at',
         'timezone',
-        'schedule_frequency',
+        'window_length',
         'completion_latency',
         'created_at',
         'updated_at',
@@ -186,8 +186,8 @@ class TimedAction extends Model implements HasPresenter
      */
     public function validate()
     {
-        if ($this->completion_latency < $this->schedule_frequency) {
-            throw new ValidationException('Completion latency must be lower than the schedule frequency.');
+        if ($this->completion_latency < $this->window_length) {
+            throw new ValidationException('Completion latency must be lower than the window length.');
         }
     }
 

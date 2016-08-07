@@ -45,8 +45,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="action-schedule_frequency">{{ trans('forms.actions.schedule_frequency') }}</label>
-                        <input type="number" min="0" class="form-control" name="schedule_frequency" id="action-schedule_frequency" required value="{{ Binput::old('schedule_frequency') }}">
+                        <label for="action-window_length">{{ trans('forms.actions.window_length') }}</label>
+                        <input type="number" min="0" class="form-control" name="window_length" id="action-window_length" required value="{{ Binput::old('window_length') }}">
                     </div>
                     <div class="form-group">
                         <label for="action-completion_latency">{{ trans('forms.actions.completion_latency') }}</label>

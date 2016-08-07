@@ -66,7 +66,7 @@ class TimedAction implements TimedActionContract
     public function previous(TimedActionModel $action)
     {
         $end = $this->currentWindowStart();
-        $start = $end->copy()->subSeconds($action->schedule_frequency);
+        $start = $end->copy()->subSeconds($action->window_length);
 
         // todo - valid comparison
         if ($start < Carbon::now()) {
@@ -95,7 +95,7 @@ class TimedAction implements TimedActionContract
             throw new InvalidArgumentException();
         }
 
-        $offset = $action->start_at->diffInSeconds($now) % $action->schedule_frequency;
+        $offset = $action->start_at->diffInSeconds($now) % $action->window_length;
 
         $start = $now->copy()->subSeconds($offset);
     }

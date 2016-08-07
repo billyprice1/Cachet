@@ -57,7 +57,7 @@ class CreateTimedActionCommandHandler
             'active'                => $command->active,
             'start_at'              => $this->dates->create('d/m/Y H:i', $command->start_at),
             'timezone'              => $command->timezone,
-            'schedule_frequency'    => $command->schedule_frequency,
+            'window_length'         => $command->window_length,
             'completion_latency'    => $command->completion_latency,
             'timed_action_group_id' => $command->timed_action_group_id,
         ]);

@@ -84,11 +84,11 @@ class ActionController extends AbstractApiController
         $actionDate = $dateFactory->make($action->start_at);
         $nowDate = $dateFactory->make();
         $diffSeconds = $nowDate->diffInSeconds($actionDate);
-        $instancesSinceTime = floor($diffSeconds / $action->schedule_frequency);
+        $instancesSinceTime = floor($diffSeconds / $action->window_length);
         $instances = array_fill($instancesSinceTime - $perPage, $perPage, null);
 
         foreach ($instances as $instancesAgo => $instance) {
-            $instanceSecondsAgo = $action->schedule_frequency * $instancesAgo;
+            $instanceSecondsAgo = $action->window_length * $instancesAgo;
             $timeFromInstance = $nowDate->sub(new DateInterval('PT'.$instanceSecondsAgo.'S'));
             $instance = new TimedActionInstance();
             $instance->fill([
@@ -141,7 +141,7 @@ class ActionController extends AbstractApiController
                 Binput::get('active', false),
                 Binput::get('start_at'),
                 Binput::get('timezone'),
-                Binput::get('schedule_frequency'),
+                Binput::get('window_length'),
                 Binput::get('completion_latency'),
                 Binput::get('timed_action_group_id')
             ));
