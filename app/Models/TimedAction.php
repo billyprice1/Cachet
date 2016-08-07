@@ -173,8 +173,8 @@ class TimedAction extends Model implements HasPresenter
      */
     public function validate()
     {
-        if ($this->completion_latency > $this->schedule_frequency) {
-            throw new ValidationException('Completion latency must be higher than the schedule frequency.');
+        if ($this->completion_latency < $this->schedule_frequency) {
+            throw new ValidationException('Completion latency must be lower than the schedule frequency.');
         }
 
         if ((((24 * 60 * 60) / $this->schedule_frequency) % $this->schedule_frequency) > 0) {
