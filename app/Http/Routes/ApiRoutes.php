@@ -31,6 +31,11 @@ class ApiRoutes
     {
         $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => ['api']], function (Registrar $router) {
             $router->group(['middleware' => ['auth.api']], function (Registrar $router) {
+                $router->get('actions', 'ActionController@getActions');
+                $router->get('actions/{timed_action}', 'ActionController@getAction');
+                $router->get('actions/{timed_action}/instances', 'ActionController@getActionInstances');
+                $router->get('actions/{timed_action}/instances/{timed_action_instance}', 'ActionController@getActionInstance');
+
                 $router->get('ping', 'GeneralController@ping');
                 $router->get('version', 'GeneralController@version');
                 $router->get('status', 'GeneralController@status');
@@ -49,11 +54,6 @@ class ApiRoutes
             });
 
             $router->group(['middleware' => ['auth.api:true']], function (Registrar $router) {
-                $router->get('actions', 'ActionController@getActions');
-                $router->get('actions/{timed_action}', 'ActionController@getAction');
-                $router->get('actions/{timed_action}/instances', 'ActionController@getActionInstances');
-                $router->get('actions/{timed_action}/instances/{timed_action_instance}', 'ActionController@getActionInstance');
-
                 $router->get('subscribers', 'SubscriberController@getSubscribers');
 
                 $router->post('actions', 'ActionController@postActions');

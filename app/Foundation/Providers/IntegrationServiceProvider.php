@@ -16,10 +16,12 @@ use CachetHQ\Cachet\Integrations\Contracts\Credits as CreditsContract;
 use CachetHQ\Cachet\Integrations\Contracts\Feed as FeedContract;
 use CachetHQ\Cachet\Integrations\Contracts\Releases as ReleasesContract;
 use CachetHQ\Cachet\Integrations\Contracts\System as SystemContract;
+use CachetHQ\Cachet\Integrations\Contracts\TimedAction as TimedActionContract;
 use CachetHQ\Cachet\Integrations\Core\Beacon;
 use CachetHQ\Cachet\Integrations\Core\Credits;
 use CachetHQ\Cachet\Integrations\Core\Feed;
 use CachetHQ\Cachet\Integrations\Core\System;
+use CachetHQ\Cachet\Integrations\Core\TimedAction;
 use CachetHQ\Cachet\Integrations\GitHub\Releases;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
@@ -42,6 +44,7 @@ class IntegrationServiceProvider extends ServiceProvider
         $this->registerCredits();
         $this->registerFeed();
         $this->registerSystem();
+        $this->registerTimedAction();
 
         $this->registerReleases();
     }
@@ -97,6 +100,18 @@ class IntegrationServiceProvider extends ServiceProvider
     {
         $this->app->singleton(SystemContract::class, function (Container $app) {
             return new System();
+        });
+    }
+
+    /**
+     * Register the timed action instance class.
+     *
+     * @return void
+     */
+    protected function registerTimedAction()
+    {
+        $this->app->singleton(TimedActionContract::class, function (Container $app) {
+            return new TimedAction();
         });
     }
 
