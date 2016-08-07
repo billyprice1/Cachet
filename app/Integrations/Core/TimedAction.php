@@ -13,6 +13,8 @@ namespace CachetHQ\Cachet\Integrations\Core;
 
 use CachetHQ\Cachet\Integrations\Contracts\TimedAction as TimedActionContract;
 use CachetHQ\Cachet\Models\TimedAction as TimedActionModel;
+use Carbon\Carbon;
+use InvalidArgumentException;
 
 /**
  * This is the timed action repository class.
@@ -45,11 +47,13 @@ class TimedAction implements TimedActionContract
      *
      * @param \CachetHQ\Cachet\Integrations\Contracts\TimedAction $action
      *
-     * @return \CachetHQ\Cachet\Models\TimedActionInstance
+     * @return \CachetHQ\Cachet\Models\TimedActionInstance|null
      */
     public function current(TimedActionModel $action)
     {
-        // todo graham
+        $start = $this->currentWindowStart();
+
+        return $action->instances()->where('created_at', '>=', $start)->first();
     }
 
     /**
@@ -57,11 +61,43 @@ class TimedAction implements TimedActionContract
      *
      * @param \CachetHQ\Cachet\Models\TimedAction $action
      *
-     * @return \CachetHQ\Cachet\Models\TimedActionInstance
+     * @return \CachetHQ\Cachet\Models\TimedActionInstance|null
      */
     public function previous(TimedActionModel $action)
     {
-        return $action->instances()->where('');
+        $end = $this->currentWindowStart();
+        $start = $end->copy()->subSeconds($action->schedule_frequency);
+
+        // todo - valid comparison
+        if ($start < Carbon::now()) {
+            throw new InvalidArgumentException();
+        }
+
+        return $action->instances()
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<', $end)
+            ->first();
+    }
+
+    /**
+     * Get the start time of the current window.
+     *
+     * @param \CachetHQ\Cachet\Models\TimedAction $action
+     *
+     * @return \Carbon\Carbon
+     */
+    protected function currentWindowStart(TimedActionModel $action)
+    {
+        $now = Carbon::now();
+
+        // todo - valid comparison
+        if ($action->start_at > $now) {
+            throw new InvalidArgumentException();
+        }
+
+        $offset = $action->start_at->diffInSeconds($now) % $action->schedule_frequency;
+
+        $start = $now->copy()->subSeconds($action->schedule_frequency)->addSeconds($offset);
     }
 
     /**
