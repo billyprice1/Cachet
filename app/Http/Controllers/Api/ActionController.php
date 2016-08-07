@@ -81,7 +81,7 @@ class ActionController extends AbstractApiController
         $dateFactory = app()->make(DateFactory::class);
         $dateFactory->setTimezone($action->timezone);
 
-        $actionDate = $dateFactory->make($action->created_at);
+        $actionDate = $dateFactory->make($action->start_at);
         $nowDate = $dateFactory->make();
         $diffSeconds = $nowDate->diffInSeconds($actionDate);
         $instancesSinceTime = floor($diffSeconds / $action->schedule_frequency);
