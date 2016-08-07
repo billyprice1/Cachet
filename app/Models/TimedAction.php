@@ -12,6 +12,7 @@
 namespace CachetHQ\Cachet\Models;
 
 use AltThree\Validator\ValidatingTrait;
+use AltThree\Validator\ValidationException;
 use CachetHQ\Cachet\Models\Traits\SearchableTrait;
 use CachetHQ\Cachet\Models\Traits\SortableTrait;
 use CachetHQ\Cachet\Presenters\TimedActionPresenter;
@@ -161,6 +162,20 @@ class TimedAction extends Model implements HasPresenter
     public function scopeInactive(Builder $query)
     {
         return $query->where('active', false);
+    }
+
+    /**
+     * Validate the model.
+     *
+     * @throws \AltThree\Validator\ValidationException
+     *
+     * @return void
+     */
+    public function validate()
+    {
+        if ($this->completion_latency > $this->schedule_frequency) {
+            throw new ValidationException('Completion latency must be higher than the schedule frequency.');
+        }
     }
 
     /**
