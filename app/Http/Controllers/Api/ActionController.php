@@ -142,7 +142,6 @@ class ActionController extends AbstractApiController
                 Binput::get('timezone', null),
                 Binput::get('schedule_frequency'),
                 Binput::get('completion_latency'),
-                Binput::get('start_at'),
                 Binput::get('timed_action_group_id')
             ));
         } catch (QueryException $e) {
