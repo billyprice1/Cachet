@@ -97,7 +97,7 @@ class TimedAction implements TimedActionContract
 
         $offset = $action->start_at->diffInSeconds($now) % $action->schedule_frequency;
 
-        $start = $now->copy()->subSeconds($action->schedule_frequency)->addSeconds($offset);
+        $start = $now->copy()->subSeconds($offset);
     }
 
     /**
