@@ -26,6 +26,7 @@ class CreatedTimedActionsInstancesTable extends Migration
             $table->increments('id');
             $table->integer('timed_action_id')->unsigned();
             $table->text('message')->nullable()->default(null);
+            $table->tinyInteger('status')->unsigned();
             $table->timestamp('started_at');
             $table->timestamp('completed_at');
             $table->timestamps();

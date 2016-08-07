@@ -13,6 +13,7 @@ namespace CachetHQ\Cachet\Models;
 
 use AltThree\Validator\ValidatingTrait;
 use CachetHQ\Cachet\Models\Traits\SortableTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,6 +26,27 @@ class TimedActionInstance extends Model
     use SortableTrait, ValidatingTrait;
 
     /**
+     * The instance was successfully created naturally.
+     *
+     * @var int
+     */
+    const SUCCESSFUL = 0;
+
+    /**
+     * The instancw was created by our cron job.
+     *
+     * @var int
+     */
+    const FAILED = 1;
+
+    /**
+     * The api was posted in a time window, but the latency period has already passed.
+     *
+     * @var int
+     */
+    const LATE = 2;
+
+    /**
      * The attributes that should be casted to native types.
      *
      * @var string[]
@@ -32,6 +54,7 @@ class TimedActionInstance extends Model
     protected $casts = [
         'timed_action_id' => 'int',
         'message'         => 'string',
+        'status'          => 'int',
         'started_at'      => 'date',
         'completed_at'    => 'date',
     ];
@@ -44,6 +67,7 @@ class TimedActionInstance extends Model
     protected $fillable = [
         'timed_action_id',
         'message',
+        'status',
         'started_at',
         'completed_at',
         'created_at',
@@ -57,6 +81,7 @@ class TimedActionInstance extends Model
      */
     public $rules = [
         'timed_action_id' => 'required|int',
+        'status'          => 'required|int|min:0|max:2',
         'started_at'      => 'required|date',
         'completed_at'    => 'required|date',
     ];
@@ -81,5 +106,41 @@ class TimedActionInstance extends Model
     public function action()
     {
         return $this->belongsTo(TimedAction::class);
+    }
+
+    /**
+     * Scope instances to those that were successful.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSuccessful(Builder $query)
+    {
+        return $query->where('status', self::SUCCESSFUL);
+    }
+
+    /**
+     * Scope instances to those that were late.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeLate(Builder $query)
+    {
+        return $query->where('status', self::LATE);
+    }
+
+    /**
+     * Scope instances to those that failed.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFailed(Builder $query)
+    {
+        return $query->where('status', self::FAILED);
     }
 }

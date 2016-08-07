@@ -45,9 +45,6 @@ class TimedAction implements TimedActionContract
      *
      * @param \CachetHQ\Cachet\Integrations\Contracts\TimedAction $action
      *
-     * @throws \CachetHQ\Cachet\Integrations\Exceptions\InstanceIsLateException
-     * @throws \CachetHQ\Cachet\Integrations\Exceptions\InstanceIsPendingException
-     *
      * @return \CachetHQ\Cachet\Models\TimedActionInstance
      */
     public function current(TimedActionModel $action)
@@ -59,9 +56,6 @@ class TimedAction implements TimedActionContract
      * Get the previous instance.
      *
      * @param \CachetHQ\Cachet\Models\TimedAction $action
-     *
-     * @throws \CachetHQ\Cachet\Integrations\Exceptions\InstanceIsLateException
-     * @throws \CachetHQ\Cachet\Integrations\Exceptions\InstanceIsPendingException
      *
      * @return \CachetHQ\Cachet\Models\TimedActionInstance
      */

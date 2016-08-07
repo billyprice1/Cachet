@@ -25,18 +25,12 @@ interface TimedAction
      *
      * @param \CachetHQ\Cachet\Integrations\Contracts\TimedAction $action;
      *
-     * @throws \CachetHQ\Cachet\Integrations\Core\InstanceIsLateException
-     * @throws \CachetHQ\Cachet\Integrations\Core\InstanceIsPendingException
-     *
      * @return \CachetHQ\Cachet\Models\TimedActionInstance
      */
     public function current(TimedActionModel $action);
 
     /**
      * Get the previous instance.
-     *
-     * @throws \CachetHQ\Cachet\Integrations\Exceptions\InstanceIsLateException
-     * @throws \CachetHQ\Cachet\Integrations\Exceptions\InstanceIsPendingException
      *
      * @return \CachetHQ\Cachet\Models\TimedActionInstance
      */

@@ -30,11 +30,15 @@ class CreateTimedActionInstanceCommandHandler
      */
     public function handle(CreateTimedActionInstanceCommand $command)
     {
+        // Only we should be overriding the status, so assume successful.
+        $instanceStatus = $command->status ? $command->status : TimedActionInstance::SUCCESSFUL;
+
         $instance = TimedActionInstance::create([
-            'timed_action_id'       => $command->action->id,
-            'message'               => $command->message,
-            'started_at'            => $command->started_at,
-            'completed_at'          => $command->completed_at,
+            'timed_action_id' => $command->action->id,
+            'message'         => $command->message,
+            'status'          => $instanceStatus,
+            'started_at'      => $command->started_at,
+            'completed_at'    => $command->completed_at,
         ]);
 
         return $instance;

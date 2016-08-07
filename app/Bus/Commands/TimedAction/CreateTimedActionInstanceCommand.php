@@ -35,6 +35,13 @@ final class CreateTimedActionInstanceCommand
     public $message;
 
     /**
+     * The status of the instance.
+     *
+     * @var int
+     */
+    public $status;
+
+    /**
      * The time in which the action was started.
      *
      * @var string
@@ -58,10 +65,11 @@ final class CreateTimedActionInstanceCommand
      *
      * @return void
      */
-    public function __construct(TimedAction $action, $message, $started_at, $completed_at)
+    public function __construct(TimedAction $action, $message, $started_at, $completed_at, $status = null)
     {
         $this->action = $action;
         $this->message = $message;
+        $this->status = $status;
         $this->started_at = $started_at;
         $this->completed_at = $completed_at;
     }
