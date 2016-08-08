@@ -84,7 +84,7 @@ class WindowFactory
      */
     protected function previousWindowStart(TimedAction $action)
     {
-        $start = $this->currentWindowStart()->subSeconds($action->window_length);
+        $start = $this->currentWindowStart($action)->subSeconds($action->window_length);
 
         $diff = $start->diffInSeconds($now);
 
