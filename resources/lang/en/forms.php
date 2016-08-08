@@ -89,7 +89,7 @@ return [
         'start_at'           => 'Schedule start time',
         'timezone'           => 'Timezone',
         'window_length'      => 'Window length (in seconds)',
-        'completion_latency' => 'Completion latency (in seconds)',
+        'completion_latency' => 'Target completion latency (in seconds)',
         'group'              => 'Group',
         'active'             => 'Active?',
         'groups'             => [
