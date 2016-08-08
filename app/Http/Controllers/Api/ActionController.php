@@ -11,14 +11,13 @@
 
 namespace CachetHQ\Cachet\Http\Controllers\Api;
 
+use CachetHQ\Cachet\Actions\ActionExceptionInterface;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionInstanceCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionCommand;
-use CachetHQ\Cachet\Dates\DateFactory;
 use CachetHQ\Cachet\Models\TimedAction;
 use CachetHQ\Cachet\Models\TimedActionInstance;
-use DateInterval;
 use GrahamCampbell\Binput\Facades\Binput;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Request;
@@ -74,34 +73,7 @@ class ActionController extends AbstractApiController
      */
     public function getActionInstances(TimedAction $action)
     {
-        // $instances = $action->instances();
-        // Graham do this
-        $perPage = Binput::get('per_page', 20);
-
-        $dateFactory = app()->make(DateFactory::class);
-        $dateFactory->setTimezone($action->timezone);
-
-        $actionDate = $dateFactory->make($action->start_at);
-        $nowDate = $dateFactory->make();
-        $diffSeconds = $nowDate->diffInSeconds($actionDate);
-        $instancesSinceTime = floor($diffSeconds / $action->window_length);
-        $instances = array_fill($instancesSinceTime - $perPage, $perPage, null);
-
-        foreach ($instances as $instancesAgo => $instance) {
-            $instanceSecondsAgo = $action->window_length * $instancesAgo;
-            $timeFromInstance = $nowDate->sub(new DateInterval('PT'.$instanceSecondsAgo.'S'));
-            $instance = new TimedActionInstance();
-            $instance->fill([
-                'timed_action_id' => $action->id,
-                'message'         => null,
-                'started_at'      => null,
-                'completed_at'    => null,
-                'created_at'      => $timeFromInstance,
-                'updated_at'      => $timeFromInstance,
-            ]);
-
-            $instances[$instancesAgo] = $instance;
-        }
+        $instances = $action->instances()->search(Binput::except(['sort', 'order', 'per_page']));
 
         if ($sortBy = Binput::get('sort')) {
             $direction = Binput::has('order') && Binput::get('order') == 'desc';
@@ -146,7 +118,9 @@ class ActionController extends AbstractApiController
                 Binput::get('timed_action_group_id')
             ));
         } catch (QueryException $e) {
-            throw new BadRequestHttpException($e);
+            throw new BadRequestHttpException();
+        } catch (ActionExceptionInterface $e) {
+            throw new BadRequestHttpException($e->getMessage());
         }
 
         return $this->item($action);
@@ -169,7 +143,7 @@ class ActionController extends AbstractApiController
                 Binput::get('completed_at', null)
             ));
         } catch (QueryException $e) {
-            throw new BadRequestHttpException($e);
+            throw new BadRequestHttpException();
         }
 
         return $this->item($action);
@@ -193,7 +167,7 @@ class ActionController extends AbstractApiController
                 Binput::get('timed_action_group_id')
             ));
         } catch (QueryException $e) {
-            throw new BadRequestHttpException($e);
+            throw new BadRequestHttpException();
         }
 
         return $this->item($action);

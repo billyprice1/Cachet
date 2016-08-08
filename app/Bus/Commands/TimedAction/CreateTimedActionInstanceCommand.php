@@ -56,21 +56,30 @@ final class CreateTimedActionInstanceCommand
     public $completed_at;
 
     /**
+     * If the instance has failed.
+     *
+     * @var bool
+     */
+    public $failed;
+
+    /**
      * Create a new created timed action instance command instance.
      *
      * @param \CachetHQ\Cachet\Models\TimedAction $action
      * @param null|string                         $message
      * @param string                              $started_at
      * @param string                              $completed_at
+     * @param bool                                $failed
      *
      * @return void
      */
-    public function __construct(TimedAction $action, $message, $started_at, $completed_at, $status = null)
+    public function __construct(TimedAction $action, $message, $started_at, $completed_at, $failed = false)
     {
         $this->action = $action;
         $this->message = $message;
         $this->status = $status;
         $this->started_at = $started_at;
         $this->completed_at = $completed_at;
+        $this->failed = $failed;
     }
 }

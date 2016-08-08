@@ -11,6 +11,8 @@
 
 namespace CachetHQ\Cachet\Bus\Handlers\Commands\TimedAction;
 
+use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionInstanceCommand;
+
 /**
  * This is the delete timed action instance command handler class.
  *

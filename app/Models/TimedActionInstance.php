@@ -12,6 +12,7 @@
 namespace CachetHQ\Cachet\Models;
 
 use AltThree\Validator\ValidatingTrait;
+use CachetHQ\Cachet\Actions\Window;
 use CachetHQ\Cachet\Models\Traits\SortableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -106,6 +107,19 @@ class TimedActionInstance extends Model
     public function action()
     {
         return $this->belongsTo(TimedAction::class);
+    }
+
+    /**
+     * Scope instances to those within the given window.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \CachetHQ\Cachet\Actions\Window       $window
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWindow(Builder $query, Window $window)
+    {
+        return $query->where('created_at', '>=', $window->start())->where('created_at', '=<', $window->end());
     }
 
     /**

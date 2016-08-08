@@ -186,8 +186,12 @@ class TimedAction extends Model implements HasPresenter
      */
     public function validate()
     {
-        if ($this->completion_latency < $this->window_length) {
-            throw new ValidationException('Completion latency must be lower than the window length.');
+        if ($this->window_length < 120) {
+            throw new ValidationException('The window length must be at least 120 seconds.');
+        }
+
+        if ($this->completion_latency > $this->window_length) {
+            throw new ValidationException('The completion latency must equal to or less than the window length.');
         }
     }
 

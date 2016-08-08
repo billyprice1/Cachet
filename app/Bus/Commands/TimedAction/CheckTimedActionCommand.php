@@ -11,6 +11,8 @@
 
 namespace CachetHQ\Cachet\Bus\Commands\TimedAction;
 
+use CachetHQ\Cachet\Models\TimedAction;
+
 /**
  * This is the check timed action command class.
  *

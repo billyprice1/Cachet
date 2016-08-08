@@ -108,7 +108,7 @@ $factory->define(TimedAction::class, function ($faker) {
         'description'           => $faker->sentence(),
         'active'                => true,
         'timezone'              => $faker->timezone,
-        'schedule_frequency'    => 3600,
+        'window_length'         => 3600,
         'completion_latency'    => 1800,
     ];
 });

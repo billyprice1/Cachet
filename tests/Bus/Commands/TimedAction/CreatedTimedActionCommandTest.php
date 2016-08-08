@@ -34,11 +34,11 @@ class CreatedTimedActionCommandTest extends AbstractTestCase
             'description'        => 'Foo bar',
             'active'             => true,
             'timezone'           => 'Europe/London',
-            'schedule_frequency' => 3600,
+            'window_length'      => 3600,
             'completion_latency' => 360,
         ];
 
-        $object = new CreateTimedActionCommand($params['name'], $params['description'], $params['active'], $params['timezone'], $params['schedule_frequency'], $params['completion_latency'], $params['group']);
+        $object = new CreateTimedActionCommand($params['name'], $params['description'], $params['active'], $params['timezone'], $params['window_length'], $params['completion_latency'], $params['group']);
 
         return compact('params', 'object');
     }

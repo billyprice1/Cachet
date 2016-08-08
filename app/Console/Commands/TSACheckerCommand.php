@@ -11,6 +11,7 @@
 
 namespace CachetHQ\Cachet\Console\Commands;
 
+use CachetHQ\Cachet\Actions\ActionExceptionInterface;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CheckTimedActionCommand;
 use CachetHQ\Cachet\Models\TimedAction;
 use Illuminate\Console\Command;
@@ -45,8 +46,11 @@ class TSACheckerCommand extends Command
     public function fire()
     {
         foreach (TimedAction::started()->get() as $action) {
-            // todo - filter out actions which have not had time for one whole window to pass yet
-            dispatch(new CheckTimedActionCommand($action));
+            try {
+                dispatch(new CheckTimedActionCommand($action));
+            } catch (ActionExceptionInterface $e) {
+                // just means they're not started or matured
+            }
         }
     }
 }
