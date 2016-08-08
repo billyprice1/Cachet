@@ -13,9 +13,9 @@ namespace CachetHQ\Cachet\Http\Controllers\Api;
 
 use CachetHQ\Cachet\Actions\ActionExceptionInterface;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionCommand;
-use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionInstanceCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionCommand;
+use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionInstanceCommand;
 use CachetHQ\Cachet\Models\TimedAction;
 use CachetHQ\Cachet\Models\TimedActionInstance;
 use GrahamCampbell\Binput\Facades\Binput;
@@ -125,31 +125,6 @@ class ActionController extends AbstractApiController
     }
 
     /**
-     * Create a timed action instance.
-     *
-     * @param \CachetHQ\Cachet\Models\TimedAction $action
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function postActionInstance(TimedAction $action)
-    {
-        try {
-            $action = dispatch(new CreateTimedActionInstanceCommand(
-                $action,
-                Binput::get('message', null),
-                Binput::get('started_at'),
-                Binput::get('completed_at', null)
-            ));
-        } catch (QueryException $e) {
-            throw new BadRequestHttpException();
-        } catch (ActionExceptionInterface $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        return $this->item($action);
-    }
-
-    /**
      * Update a timed action.
      *
      * @param \CachetHQ\Cachet\Models\TimedAction $action
@@ -171,6 +146,31 @@ class ActionController extends AbstractApiController
         }
 
         return $this->item($action);
+    }
+
+    /**
+     * Update a timed action instance.
+     *
+     * @param \CachetHQ\Cachet\Models\TimedAction         $action
+     * @param \CachetHQ\Cachet\Models\TimedActionInstance $instance
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function putActionInstance(TimedAction $action, TimedActionInstance $instance)
+    {
+        try {
+            $instance = dispatch(new UpdateTimedActionInstanceCommand(
+                $instance,
+                Binput::get('message', null),
+                Binput::get('created_at', null)
+            ));
+        } catch (QueryException $e) {
+            throw new BadRequestHttpException();
+        } catch (ActionExceptionInterface $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        return $this->item($instance);
     }
 
     /**

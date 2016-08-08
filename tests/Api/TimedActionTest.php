@@ -85,47 +85,6 @@ class TimedActionTest extends AbstractApiTestCase
         $this->seeJson($action->toArray());
     }
 
-    public function testPostActionInstance()
-    {
-        $this->beUser();
-
-        $action = factory(TimedAction::class)->create();
-        $instance = factory(TimedActionInstance::class)->make([
-            'timed_action_id' => $action->id,
-        ]);
-
-        $this->post('/api/v1/actions/'.$action->id.'/instances', $instance->toArray());
-        $this->seeJson($instance->toArray());
-    }
-
-    public function testPostActionInstanceLate()
-    {
-        $this->beUser();
-
-        $action = factory(TimedAction::class)->create();
-        $action->update(['start_at' => Carbon::now()->subMinutes(40)]);
-        $instance = factory(TimedActionInstance::class)->make([
-            'timed_action_id' => $action->id,
-        ]);
-
-        $this->post('/api/v1/actions/'.$action->id.'/instances', $instance->toArray());
-        $this->seeJson(array_merge($instance->toArray(), ['status' => TimedActionInstance::LATE]));
-    }
-
-    public function testPostActionInstanceNotStarted()
-    {
-        $this->beUser();
-
-        $action = factory(TimedAction::class)->create();
-        $action->update(['start_at' => Carbon::now()->addMinutes(10)]);
-        $instance = factory(TimedActionInstance::class)->make([
-            'timed_action_id' => $action->id,
-        ]);
-
-        $this->post('/api/v1/actions/'.$action->id.'/instances', $instance->toArray());
-        $this->assertResponseStatus(400);
-    }
-
     public function testPutAction()
     {
         $this->beUser();
@@ -138,5 +97,33 @@ class TimedActionTest extends AbstractApiTestCase
             'name' => 'Test',
         ]);
         $this->seeJson(['name' => 'Test']);
+    }
+
+    public function testPutActionInstance()
+    {
+        $this->beUser();
+
+        $action = factory(TimedAction::class)->create();
+        $instance = factory(TimedActionInstance::class)->make([
+            'timed_action_id' => $action->id,
+            'message'         => 'foo',
+        ]);
+
+        $this->put('/api/v1/actions/'.$action->id.'/instances/'.$instance->id, ['message' => 'foo']);
+        $this->seeJson($instance->toArray());
+    }
+
+    public function testPutActionInstanceNotStarted()
+    {
+        $this->beUser();
+
+        $action = factory(TimedAction::class)->create();
+        $action->update(['start_at' => Carbon::now()->addMinutes(10)]);
+        $instance = factory(TimedActionInstance::class)->make([
+            'timed_action_id' => $action->id,
+        ]);
+
+        $this->put('/api/v1/actions/'.$action->id.'/instances/'.$instance->id, ['message' => 'foo']);
+        $this->assertResponseStatus(400);
     }
 }

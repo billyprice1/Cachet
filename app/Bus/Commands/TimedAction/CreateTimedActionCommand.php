@@ -75,7 +75,7 @@ final class CreateTimedActionCommand
     public $timed_action_group_id;
 
     /**
-     * Create a new created timed action command instance.
+     * Create a new create timed action command instance.
      *
      * @param string   $name
      * @param string   $description
