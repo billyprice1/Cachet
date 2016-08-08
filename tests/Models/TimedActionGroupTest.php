@@ -11,6 +11,7 @@
 
 namespace CachetHQ\Tests\Cachet\Models;
 
+use AltThree\TestBench\ValidationTrait;
 use CachetHQ\Cachet\Models\TimedActionGroup;
 use CachetHQ\Tests\Cachet\AbstractTestCase;
 
@@ -21,8 +22,10 @@ use CachetHQ\Tests\Cachet\AbstractTestCase;
  */
 class TimedActionGroupTest extends AbstractTestCase
 {
+    use ValidationTrait;
+
     public function testValidation()
     {
-        $this->assertTrue(property_exists(new TimedActionGroup(), 'rules'));
+        $this->checkRules(new TimedActionGroup());
     }
 }
