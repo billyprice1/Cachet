@@ -54,11 +54,11 @@ class CreateTimedActionInstanceCommandHandler
     public function handle(CreateTimedActionInstanceCommand $command)
     {
         $action = $command->action;
-        $window = $this->windows->current($action)->start();
+        $window = $this->windows->current($action);
 
         if ($command->failed) {
             $status = TimedActionInstance::FAILED;
-        } elseif ($window->start()->addSeconds($action->completion_latency)->diffInSeconds(Carbon::now()) > 0) {
+        } elseif ($window->start()->addSeconds($action->completion_latency)->diffInSeconds(Carbon::now(), false) < 0) {
             $status = TimedActionInstance::SUCCESSFUL;
         } else {
             $status = TimedActionInstance::LATE;

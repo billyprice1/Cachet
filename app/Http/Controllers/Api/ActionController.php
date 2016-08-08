@@ -119,8 +119,6 @@ class ActionController extends AbstractApiController
             ));
         } catch (QueryException $e) {
             throw new BadRequestHttpException();
-        } catch (ActionExceptionInterface $e) {
-            throw new BadRequestHttpException($e->getMessage());
         }
 
         return $this->item($action);
@@ -144,6 +142,8 @@ class ActionController extends AbstractApiController
             ));
         } catch (QueryException $e) {
             throw new BadRequestHttpException();
+        } catch (ActionExceptionInterface $e) {
+            throw new BadRequestHttpException($e->getMessage());
         }
 
         return $this->item($action);

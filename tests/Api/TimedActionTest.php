@@ -11,6 +11,10 @@
 
 namespace CachetHQ\Tests\Cachet\Api;
 
+use CachetHQ\Cachet\Models\TimedAction;
+use CachetHQ\Cachet\Models\TimedActionInstance;
+use Carbon\Carbon;
+
 /**
  * This is the timed action test class.
  *
@@ -20,7 +24,7 @@ class TimedActionTest extends AbstractApiTestCase
 {
     public function testGetActionsUnauthorized()
     {
-        factory('CachetHQ\Cachet\Models\TimedAction')->create();
+        factory(TimedAction::class)->create();
 
         $this->get('/api/v1/actions');
         $this->assertResponseStatus(401);
@@ -30,7 +34,7 @@ class TimedActionTest extends AbstractApiTestCase
     {
         $this->beUser();
 
-        $action = factory('CachetHQ\Cachet\Models\TimedAction')->create();
+        $action = factory(TimedAction::class)->create();
 
         $this->get('/api/v1/actions');
         $this->seeJson($action->toArray());
@@ -40,7 +44,7 @@ class TimedActionTest extends AbstractApiTestCase
     {
         $this->beUser();
 
-        $action = factory('CachetHQ\Cachet\Models\TimedAction')->create();
+        $action = factory(TimedAction::class)->create();
 
         $this->get('/api/v1/actions/'.$action->id);
         $this->seeJson($action->toArray());
@@ -50,8 +54,8 @@ class TimedActionTest extends AbstractApiTestCase
     {
         $this->beUser();
 
-        $action = factory('CachetHQ\Cachet\Models\TimedAction')->create();
-        $instance = factory('CachetHQ\Cachet\Models\TimedActionInstance')->create([
+        $action = factory(TimedAction::class)->create();
+        $instance = factory(TimedActionInstance::class)->create([
             'timed_action_id' => $action->id,
         ]);
 
@@ -63,7 +67,7 @@ class TimedActionTest extends AbstractApiTestCase
     {
         $this->beUser();
 
-        $instance = factory('CachetHQ\Cachet\Models\TimedActionInstance')->create();
+        $instance = factory(TimedActionInstance::class)->create();
 
         $this->get('/api/v1/actions/'.$instance->timed_action_id.'/instances/'.$instance->id);
         $this->seeJson($instance->toArray());
@@ -73,7 +77,7 @@ class TimedActionTest extends AbstractApiTestCase
     {
         $this->beUser();
 
-        $action = factory('CachetHQ\Cachet\Models\TimedAction')->make([
+        $action = factory(TimedAction::class)->make([
             'timed_action_group_id' => null,
         ]);
 
@@ -85,8 +89,8 @@ class TimedActionTest extends AbstractApiTestCase
     {
         $this->beUser();
 
-        $action = factory('CachetHQ\Cachet\Models\TimedAction')->create();
-        $instance = factory('CachetHQ\Cachet\Models\TimedActionInstance')->make([
+        $action = factory(TimedAction::class)->create();
+        $instance = factory(TimedActionInstance::class)->make([
             'timed_action_id' => $action->id,
         ]);
 
@@ -94,11 +98,39 @@ class TimedActionTest extends AbstractApiTestCase
         $this->seeJson($instance->toArray());
     }
 
+    public function testPostActionInstanceLate()
+    {
+        $this->beUser();
+
+        $action = factory(TimedAction::class)->create();
+        $action->update(['start_at' => Carbon::now()->subMinutes(40)]);
+        $instance = factory(TimedActionInstance::class)->make([
+            'timed_action_id' => $action->id,
+        ]);
+
+        $this->post('/api/v1/actions/'.$action->id.'/instances', $instance->toArray());
+        $this->seeJson(array_merge($instance->toArray(), ['status' => TimedActionInstance::LATE]));
+    }
+
+    public function testPostActionInstanceNotStarted()
+    {
+        $this->beUser();
+
+        $action = factory(TimedAction::class)->create();
+        $action->update(['start_at' => Carbon::now()->addMinutes(10)]);
+        $instance = factory(TimedActionInstance::class)->make([
+            'timed_action_id' => $action->id,
+        ]);
+
+        $this->post('/api/v1/actions/'.$action->id.'/instances', $instance->toArray());
+        $this->assertResponseStatus(400);
+    }
+
     public function testPutAction()
     {
         $this->beUser();
 
-        $action = factory('CachetHQ\Cachet\Models\TimedAction')->create([
+        $action = factory(TimedAction::class)->create([
             'timed_action_group_id' => null,
         ]);
 

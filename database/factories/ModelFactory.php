@@ -110,7 +110,7 @@ $factory->define(TimedAction::class, function ($faker) {
         'timezone'              => $faker->timezone,
         'window_length'         => 3600,
         'completion_latency'    => 1800,
-        'start_at'              => Carbon::now()->addHour(),
+        'start_at'              => Carbon::now()->subHours(4),
     ];
 });
 

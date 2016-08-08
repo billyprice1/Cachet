@@ -35,18 +35,18 @@ class TimedActionInstance extends Model
     const SUCCESSFUL = 0;
 
     /**
-     * The instancw was created by our cron job.
-     *
-     * @var int
-     */
-    const FAILED = 1;
-
-    /**
      * The api was posted in a time window, but the latency period has already passed.
      *
      * @var int
      */
-    const LATE = 2;
+    const LATE = 1;
+
+    /**
+     * The instancw was created by our cron job.
+     *
+     * @var int
+     */
+    const FAILED = 2;
 
     /**
      * The attributes that should be casted to native types.

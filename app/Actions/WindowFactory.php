@@ -62,9 +62,9 @@ class WindowFactory
     {
         $now = Carbon::now();
 
-        $diff = $action->start_at->diffInSeconds($now);
+        $diff = $now->diffInSeconds($action->start_at, false);
 
-        if ($diff >= 0) {
+        if ($diff > 0) {
             throw new ActionNotStartedException("The timed action is only due to start in {$diff} seconds");
         }
 
@@ -86,7 +86,7 @@ class WindowFactory
     {
         $start = $this->currentWindowStart($action)->subSeconds($action->window_length);
 
-        $diff = $start->diffInSeconds($now);
+        $diff = Carbon::now()->diffInSeconds($start, false);
 
         if ($diff > 0) {
             throw new ActionNotMatureException("The timed action is only due to mature in {$diff} seconds");
