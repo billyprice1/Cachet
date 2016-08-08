@@ -23,7 +23,7 @@
                     </div>
                     <div class="form-group">
                         <label for="action-description">{{ trans('forms.actions.description') }}</label>
-                        <textarea rows="4" class="form-control" name="description" id="action-description" required value="{{ Binput::old('description') }}"></textarea>
+                        <textarea rows="4" class="form-control" name="description" id="action-description" value="{{ Binput::old('description') }}"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="action-start_at">{{ trans('forms.actions.start_at') }}</label>
@@ -36,7 +36,7 @@
                             @foreach($timezones as $region => $list)
                                 <optgroup label="{{ $region }}">
                                     @foreach($list as $timezone => $name)
-                                        <option value="{{ $timezone }}" @if(Config::get('cachet.timezone') == $timezone) selected @endif>{{ $timezone }}</option>
+                                    <option value="{{ $timezone }}" @if(Config::get('cachet.timezone') == $timezone) selected @endif>{{ $timezone }}</option>
                                     @endforeach
                                 </optgroup>
                             @endforeach

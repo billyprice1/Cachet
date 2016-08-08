@@ -23,7 +23,7 @@
                     </div>
                     <div class="form-group">
                         <label for="action-description">{{ trans('forms.actions.description') }}</label>
-                        <textarea rows="4" class="form-control" name="description" id="action-description" required>{{ Binput::old('action.description', $action->description) }}</textarea>
+                        <textarea rows="4" class="form-control" name="description" id="action-description">{{ Binput::old('action.description', $action->description) }}</textarea>
                     </div>
                     <div class="checkbox">
                         <label>
