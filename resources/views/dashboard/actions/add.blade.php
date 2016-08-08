@@ -36,9 +36,7 @@
                             @foreach($timezones as $region => $list)
                                 <optgroup label="{{ $region }}">
                                     @foreach($list as $timezone => $name)
-                                        <option value="{{ $timezone }}" @if(Config::get('cachet.timezone') == $timezone) selected @endif>
-                                            ({{ $timezone }}) {{ $name }}
-                                        </option>
+                                        <option value="{{ $timezone }}" @if(Config::get('cachet.timezone') == $timezone) selected @endif>{{ $timezone }}</option>
                                     @endforeach
                                 </optgroup>
                             @endforeach
