@@ -45,6 +45,34 @@
                     @else
                     <input type="hidden" name="timed_action_group_id" value="0">
                     @endif
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label for="action-start_at">{{ trans('forms.actions.start_at') }}</label>
+                        <input type="text" class="form-control" name="start_at" id="action-start_at" disabled value="{{ $action->start_at }}" rel="datepicker">
+                    </div>
+                    <div class="form-group">
+                        <label>{{ trans('forms.actions.timezone') }}</label>
+                        <select name="timezone" class="form-control" disabled>
+                            <option disabled>Select Timezone</option>
+                            @foreach($timezones as $region => $list)
+                                <optgroup label="{{ $region }}">
+                                    @foreach($list as $timezone => $name)
+                                    <option value="{{ $timezone }}" @if($action->timezone == $timezone) selected @endif>{{ $timezone }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="action-window_length">{{ trans('forms.actions.window_length') }}</label>
+                        <input type="number" min="0" class="form-control" name="window_length" id="action-window_length" disabled value="{{ $action->window_length }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="action-completion_latency">{{ trans('forms.actions.completion_latency') }}</label>
+                        <input type="number" min="0" class="form-control" name="completion_latency" id="action-completion_latency" disabled value="{{ $action->completion_latency }}">
+                    </div>
                 </fieldset>
                 <div class='form-group'>
                     <div class='btn-group'>
