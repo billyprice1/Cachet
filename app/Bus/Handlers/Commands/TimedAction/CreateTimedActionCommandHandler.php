@@ -51,11 +51,13 @@ class CreateTimedActionCommandHandler
      */
     public function handle(CreateTimedActionCommand $command)
     {
+        $format = substr_count($command->start_at, ':') === 2 ? 'Y-m-d H:i:s' : 'd/m/Y H:i';
+
         $timedAction = TimedAction::create([
             'name'                  => $command->name,
             'description'           => $command->description,
             'active'                => $command->active,
-            'start_at'              => $this->dates->create('d/m/Y H:i', $command->start_at),
+            'start_at'              => $this->dates->create($format, $command->start_at),
             'timezone'              => $command->timezone,
             'window_length'         => $command->window_length,
             'completion_latency'    => $command->completion_latency,
