@@ -13,6 +13,7 @@ namespace CachetHQ\Cachet\Models;
 
 use AltThree\Validator\ValidatingTrait;
 use CachetHQ\Cachet\Actions\Window;
+use CachetHQ\Cachet\Models\Traits\SearchableTrait;
 use CachetHQ\Cachet\Models\Traits\SortableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TimedActionInstance extends Model
 {
-    use SortableTrait, ValidatingTrait;
+    use SearchableTrait, SortableTrait, ValidatingTrait;
 
     /**
      * The instance was successfully created naturally.
@@ -85,6 +86,18 @@ class TimedActionInstance extends Model
         'status'          => 'required|int|min:0|max:2',
         'started_at'      => 'required|date',
         'completed_at'    => 'required|date',
+    ];
+
+    /**
+     * The searchable fields.
+     *
+     * @var string[]
+     */
+    protected $searchable = [
+        'id',
+        'status',
+        'started_at',
+        'completed_at',
     ];
 
     /**
