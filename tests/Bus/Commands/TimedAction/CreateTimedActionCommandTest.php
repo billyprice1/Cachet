@@ -30,8 +30,8 @@ class CreateTimedActionCommandTest extends AbstractTestCase
     protected function getObjectAndParams()
     {
         $params = [
-            'name'                  => 'support@cachethq.io',
-            'description'           => 'Foo bar',
+            'name'                  => 'Daily KPIs',
+            'description'           => 'Send the daily KPIs to the bosses.',
             'start_at'              => Carbon::now()->toDateTimeString(),
             'active'                => true,
             'timezone'              => 'Europe/London',
