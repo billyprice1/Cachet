@@ -104,7 +104,7 @@ class TimedActionTest extends AbstractApiTestCase
         $this->beUser();
 
         $action = factory(TimedAction::class)->create();
-        $instance = factory(TimedActionInstance::class)->make([
+        $instance = factory(TimedActionInstance::class)->create([
             'timed_action_id' => $action->id,
             'message'         => 'foo',
         ]);
@@ -119,7 +119,7 @@ class TimedActionTest extends AbstractApiTestCase
 
         $action = factory(TimedAction::class)->create();
         $action->update(['start_at' => Carbon::now()->addMinutes(10)]);
-        $instance = factory(TimedActionInstance::class)->make([
+        $instance = factory(TimedActionInstance::class)->create([
             'timed_action_id' => $action->id,
         ]);
 
