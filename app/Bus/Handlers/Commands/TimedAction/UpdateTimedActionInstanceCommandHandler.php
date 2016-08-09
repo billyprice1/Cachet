@@ -32,7 +32,7 @@ class UpdateTimedActionInstanceCommandHandler
     {
         $instance = $command->instance;
 
-        $action->update($this->filter($command));
+        $instance->update($this->filter($command));
 
         return $instance;
     }
