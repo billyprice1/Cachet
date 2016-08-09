@@ -64,7 +64,7 @@ class ApiRoutes
                 $router->post('subscribers', 'SubscriberController@postSubscribers');
 
                 $router->put('actions/{timed_action}', 'ActionController@putAction');
-                $router->put('actions/{timed_action}/instances/{instance}', 'ActionController@putActionInstance');
+                $router->put('actions/{timed_action}/instances/{timed_action_instance}', 'ActionController@putActionInstance');
                 $router->put('components/groups/{component_group}', 'ComponentGroupController@putGroup');
                 $router->put('components/{component}', 'ComponentController@putComponent');
                 $router->put('incidents/{incident}', 'IncidentController@putIncident');
