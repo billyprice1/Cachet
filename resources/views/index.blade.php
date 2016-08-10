@@ -23,6 +23,10 @@
 </div>
 @endif
 
+<div class="section-actions">
+    @include('partials.actions')
+</div>
+
 @if(!$scheduled_maintenance->isEmpty())
 <div class="section-scheduled">
     @include('partials.schedule')

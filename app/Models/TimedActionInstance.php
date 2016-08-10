@@ -131,4 +131,14 @@ class TimedActionInstance extends Model
 
         return $this->completed_at->gt($diff);
     }
+
+    /**
+     * Was the instance completed?
+     *
+     * @return bool
+     */
+    public function getIsCompletedAttribute()
+    {
+        return $this->completed_at !== null;
+    }
 }
