@@ -35,6 +35,11 @@ final class CreateTimedActionInstanceCommand
      */
     public $started_at;
 
+    public $rules = [
+        'action'     => 'required',
+        'started_at' => 'required|string',
+    ];
+
     /**
      * Create a new create timed action instance command instance.
      *

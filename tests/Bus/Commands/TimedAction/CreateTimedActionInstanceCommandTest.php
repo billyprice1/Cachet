@@ -44,7 +44,7 @@ class CreateTimedActionInstanceCommandTest extends AbstractTestCase
 
     protected function objectHasRules()
     {
-        return false;
+        return true;
     }
 
     protected function getHandlerClass()
