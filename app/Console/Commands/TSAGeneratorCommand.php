@@ -53,7 +53,7 @@ class TSAGeneratorCommand extends Command
                 break;
             }
 
-            if ($action->instance()->windows($window)->count() > 0) {
+            if ($action->instances()->window($window)->count() > 0) {
                 break;
             }
 
