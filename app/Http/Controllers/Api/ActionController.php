@@ -111,6 +111,7 @@ class ActionController extends AbstractApiController
                 Binput::get('name'),
                 Binput::get('description', null),
                 Binput::get('active', false),
+                Binput::get('visible', true),
                 Binput::get('start_at'),
                 Binput::get('timezone'),
                 Binput::get('window_length'),
@@ -137,8 +138,9 @@ class ActionController extends AbstractApiController
             $action = dispatch(new UpdateTimedActionCommand(
                 $action,
                 Binput::get('name'),
-                Binput::get('description', null),
-                Binput::get('active', false),
+                Binput::get('description'),
+                Binput::get('active'),
+                Binput::get('visible'),
                 Binput::get('timed_action_group_id')
             ));
         } catch (QueryException $e) {

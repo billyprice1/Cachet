@@ -70,6 +70,13 @@
                             {{ trans('forms.actions.active') }}
                         </label>
                     </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="hidden" value="0" name="visible">
+                            <input type="checkbox" value="1" name="visible" checked>
+                            {{ trans('forms.actions.visible') }}
+                        </label>
+                    </div>
                 </fieldset>
                 <div class='form-group'>
                     <div class='btn-group'>

@@ -92,6 +92,7 @@ return [
         'completion_latency' => 'Target completion latency (in seconds)',
         'group'              => 'Group',
         'active'             => 'Active?',
+        'visible'            => 'Visible on the status page?',
         'groups'             => [
             'name' => 'Group Name',
         ],
