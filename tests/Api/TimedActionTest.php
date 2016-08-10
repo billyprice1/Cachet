@@ -13,7 +13,6 @@ namespace CachetHQ\Tests\Cachet\Api;
 
 use CachetHQ\Cachet\Models\TimedAction;
 use CachetHQ\Cachet\Models\TimedActionInstance;
-use Carbon\Carbon;
 
 /**
  * This is the timed action test class.
@@ -111,19 +110,5 @@ class TimedActionTest extends AbstractApiTestCase
 
         $this->put('/api/v1/actions/'.$action->id.'/instances/'.$instance->id, ['message' => 'foo']);
         $this->seeJson($instance->toArray());
-    }
-
-    public function testPutActionInstanceNotStarted()
-    {
-        $this->beUser();
-
-        $action = factory(TimedAction::class)->create();
-        $action->update(['start_at' => Carbon::now()->addMinutes(10)]);
-        $instance = factory(TimedActionInstance::class)->create([
-            'timed_action_id' => $action->id,
-        ]);
-
-        $this->put('/api/v1/actions/'.$action->id.'/instances/'.$instance->id, ['message' => 'foo']);
-        $this->assertResponseStatus(400);
     }
 }
