@@ -28,6 +28,16 @@ class TimedActionInstance extends Model
     use SearchableTrait, SortableTrait, ValidatingTrait;
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'message'      => null,
+        'completed_at' => null,
+    ];
+
+    /**
      * The attributes that should be casted to native types.
      *
      * @var string[]
@@ -108,5 +118,17 @@ class TimedActionInstance extends Model
     public function scopeWindow(Builder $query, Window $window)
     {
         return $query->where('created_at', '>=', $window->start())->where('created_at', '=<', $window->end());
+    }
+
+    /**
+     * Was the instance submitted late?
+     *
+     * @return bool
+     */
+    public function getIsLateAttribute()
+    {
+        $diff = $this->started_at->addSeconds($this->action->completion_latency);
+
+        return $this->completed_at->gt($diff);
     }
 }
