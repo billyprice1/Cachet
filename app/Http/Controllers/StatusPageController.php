@@ -49,7 +49,7 @@ class StatusPageController extends AbstractApiController
      * Construct a new status page controller instance.
      *
      * @param \CachetHQ\Cachet\Repositories\Metric\MetricRepository $metricRepository
-     * @param \CachetHQ\Cachet\Dates\DateFactory $dates
+     * @param \CachetHQ\Cachet\Dates\DateFactory                    $dates
      *
      * @return void
      */
@@ -187,7 +187,7 @@ class StatusPageController extends AbstractApiController
 
         $instance = null;
 
-        for ($i=0; $i < 30; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $date = $dateTime->format('Y-m-d H:i').':00';
             if (!($instance = $action->instances()->where('started_at', $date)->first())) {
                 $instance = new TimedActionInstance([
@@ -196,10 +196,16 @@ class StatusPageController extends AbstractApiController
                 ]);
             }
 
-            $actionData[$dateTime->format('Y-m-d H:i')] = $instance->isCompleted ? $instance->started_at->diffInSeconds($instance->completed_at) : 0;
+            $actionData[$dateTime->format('Y-m-d H:i')] = [
+                'time_taken'   => $instance->isCompleted ? $instance->started_at->diffInSeconds($instance->completed_at) : 0,
+                'started_at'   => $instance->started_at,
+                'completed_at' => $instance->isCompleted ? $instance->completed_at->format('H:i') : null,
+            ];
 
             $dateTime->subSeconds($action->window_length);
         }
+
+        ksort($actionData);
 
         return $this->item([
             'action' => $action->toArray(),

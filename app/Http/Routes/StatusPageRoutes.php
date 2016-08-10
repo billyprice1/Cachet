@@ -46,7 +46,7 @@ class StatusPageRoutes
             ]);
 
             $router->get('actions/{timed_action}', [
-                'as' => 'actions',
+                'as'   => 'actions',
                 'uses' => 'StatusPageController@getActions',
             ]);
 

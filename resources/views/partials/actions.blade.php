@@ -14,7 +14,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <canvas id="action-{{ $action->id }}" data-action-id="{{ $action->id }}" height="160" width="600"></canvas>
+                <canvas id="action-{{ $action->id }}" data-start-at="{{ $action->start_at }}" data-completion-latency="{{ $action->completion_latency }}" data-action-id="{{ $action->id }}" height="160" width="600"></canvas>
             </div>
         </div>
     </li>
@@ -51,14 +51,19 @@
                 chart.chart.destroy();
             }
 
-            console.log(data);
+            var chartData = _.values(data);
 
             chart.chart = new Chart(chart.context, {
                 type: 'line',
                 data: {
-                    labels: _.keys(data),
+                    labels: _.map(chartData, function (data) {
+                        return data.completed_at;
+                    }),
                     datasets: [{
-                        data: _.values(data),
+                        lineTension: 0,
+                        data: _.map(chartData, function (data) {
+                            return data.time_taken;
+                        }),
                         fill: false,
                         backgroundColor: "{{ $theme_metrics }}",
                         borderColor: "{{ color_darken($theme_metrics, -0.1) }}",
@@ -66,28 +71,37 @@
                         pointBorderColor: "{{ color_darken($theme_metrics, -0.1) }}",
                         pointHoverBackgroundColor: "{{ color_darken($theme_metrics, -0.2) }}",
                         pointHoverBorderColor: "{{ color_darken($theme_metrics, -0.2) }}",
-                        spanGaps: false,
+                    }, {
+                        lineTension: 0,
+                        data: Array.from({ length: chartData.length }, function () { return $el.data('completion-latency'); }),
+                        fill: false,
                     }]
                 },
                 options: {
                     scales: {
-                        xAxes: [{
-                            type: 'time',
-                            time: {
-                                // unit: 'YYYY-MM-DD HH:mm'
-                                displayFormats: {
-                                    millisecond: 'YYYY-MM-DD HH:mm',
-                                    second: 'YYYY-MM-DD HH:mm',
-                                    minute: 'YYYY-MM-DD HH:mm',
-                                    hour: 'YYYY-MM-DD HH:mm',
-                                    day: 'YYYY-MM-DD HH:mm',
-                                    week: 'YYYY-MM-DD HH:mm',
-                                    month: 'YYYY-MM-DD HH:mm',
-                                    quarter: 'YYYY-MM-DD HH:mm',
-                                    year: 'YYYY-MM-DD HH:mm',
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                autoSkip: false,
+                                callback: function (value, index, values) {
+                                    var keys = _.keys(data)
+
+                                    return data[keys[index]].completed_at;
                                 }
                             }
+                        }],
+                        xAxes: [{
+                            display: false,
                         }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var startAt = $el.data('start-at')
+
+                                return moment(startAt).add(tooltipItem.yLabel, 's').format('h:mm');
+                            }
+                        }
                     }
                 }
             });
