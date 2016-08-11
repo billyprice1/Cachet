@@ -12,6 +12,7 @@
 namespace CachetHQ\Cachet\Http\Controllers\Api;
 
 use CachetHQ\Cachet\Actions\ActionExceptionInterface;
+use CachetHQ\Cachet\Actions\WindowFactory;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\CreateTimedActionCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\DeleteTimedActionCommand;
 use CachetHQ\Cachet\Bus\Commands\TimedAction\UpdateTimedActionCommand;
@@ -62,6 +63,22 @@ class ActionController extends AbstractApiController
     public function getAction(TimedAction $action)
     {
         return $this->item($action);
+    }
+
+    /**
+     * Get the current instance from the dates provided.
+     *
+     * @param \CachetHQ\Cachet\Models\TimedAction $action
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCurrentActionInstance(TimedAction $action)
+    {
+        $window = app(WindowFactory::class)->next($action);
+
+        $instance = TimedActionInstance::afterWindow($window)->first();
+
+        return $this->item($instance);
     }
 
     /**

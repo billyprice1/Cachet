@@ -121,6 +121,19 @@ class TimedActionInstance extends Model
     }
 
     /**
+     * Scope instances to those after the given window.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \CachetHQ\Cachet\Actions\Window       $window
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAfterWindow(Builder $query, Window $window)
+    {
+        return $query->where('created_at', '>=', $window->start());
+    }
+
+    /**
      * Was the instance submitted late?
      *
      * @return bool
