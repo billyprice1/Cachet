@@ -74,6 +74,22 @@ class ActionController extends AbstractApiController
      */
     public function getCurrentActionInstance(TimedAction $action)
     {
+        $window = app(WindowFactory::class)->current($action);
+
+        $instance = TimedActionInstance::afterWindow($window)->first();
+
+        return $this->item($instance);
+    }
+
+    /**
+     * Get the next instance from the dates provided.
+     *
+     * @param \CachetHQ\Cachet\Models\TimedAction $action
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getNextActionInstance(TimedAction $action)
+    {
         $window = app(WindowFactory::class)->next($action);
 
         $instance = TimedActionInstance::afterWindow($window)->first();

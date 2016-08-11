@@ -32,6 +32,7 @@ class ApiRoutes
         $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => ['api']], function (Registrar $router) {
             $router->group(['middleware' => ['auth.api']], function (Registrar $router) {
                 $router->get('actions/{timed_action}/instances/current', 'ActionController@getCurrentActionInstance');
+                $router->get('actions/{timed_action}/instances/next', 'ActionController@getNextActionInstance');
                 $router->get('ping', 'GeneralController@ping');
                 $router->get('version', 'GeneralController@version');
                 $router->get('status', 'GeneralController@status');
