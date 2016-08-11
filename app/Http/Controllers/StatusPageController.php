@@ -187,7 +187,16 @@ class StatusPageController extends AbstractApiController
 
         $instance = null;
 
-        for ($i = 0; $i < 30; $i++) {
+        // No more than 30 instances for now.
+        if ($instanceCount = $action->instances->count()) {
+            if ($instanceCount > 30) {
+                $instanceCount = 30;
+            }
+        } else {
+            $instanceCount = 0;
+        }
+
+        for ($i = 0; $i < $instanceCount; $i++) {
             $date = $dateTime->format('Y-m-d H:i').':00';
             if (!($instance = $action->instances()->where('started_at', $date)->first())) {
                 $instance = new TimedActionInstance([
@@ -198,7 +207,6 @@ class StatusPageController extends AbstractApiController
 
             $actionData[$dateTime->format('Y-m-d H:i')] = [
                 'time_taken'   => $instance->isCompleted ? $instance->started_at->diffInSeconds($instance->completed_at) : 0,
-                'started_at'   => $instance->started_at,
                 'completed_at' => $instance->isCompleted ? $instance->completed_at->format('H:i') : null,
             ];
 
@@ -208,7 +216,7 @@ class StatusPageController extends AbstractApiController
         ksort($actionData);
 
         return $this->item([
-            'action' => $action->toArray(),
+            'action' => array_except($action->toArray(), 'instances'),
             'items'  => $actionData,
         ]);
     }

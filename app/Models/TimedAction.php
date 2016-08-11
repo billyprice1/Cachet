@@ -133,7 +133,7 @@ class TimedAction extends Model implements HasPresenter
      */
     public function instances()
     {
-        return $this->hasMany(TimedActionInstance::class);
+        return $this->hasMany(TimedActionInstance::class)->orderBy('started_at', 'desc');
     }
 
     /**

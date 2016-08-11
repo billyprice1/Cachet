@@ -1,25 +1,19 @@
 @if($actions->count() > 0)
-<ul class="list-group">
-    @foreach($actions as $action)
-    <li class="list-group-item action" data-action-id="{{ $action->id }}">
-        <div class="row">
-            <div class="col-xs-12">
-                <strong>
-                    {{ $action->name }}
-                    @if($action->description)
-                    <i class="ion ion-ios-help-outline" data-toggle="tooltip" data-title="{{ $action->description }}"></i>
-                    @endif
-                </strong>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <canvas id="action-{{ $action->id }}" data-start-at="{{ $action->start_at }}" data-completion-latency="{{ $action->completion_latency }}" data-action-id="{{ $action->id }}" height="160" width="600"></canvas>
-            </div>
-        </div>
-    </li>
-    @endforeach
-</ul>
+@foreach($actions as $action)
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>
+            {{ $action->name }}
+            @if($action->description)
+            <i class="ion ion-ios-help-outline" data-toggle="tooltip" data-title="{{ $action->description }}"></i>
+            @endif
+        </strong>
+    </div>
+    <div class="panel-body">
+        <canvas id="action-{{ $action->id }}" data-start-at="{{ $action->start_at }}" data-completion-latency="{{ $action->completion_latency }}" data-action-id="{{ $action->id }}" height="160" width="600"></canvas>
+    </div>
+</div>
+@endforeach
 <script>
 (function () {
     Chart.defaults.global.elements.point.hitRadius = 10;
@@ -53,12 +47,16 @@
 
             var chartData = _.values(data);
 
+            var yLabels = _.map(chartData, function (data) {
+                return data.completed_at;
+            });
+
+            console.log(yLabels)
+
             chart.chart = new Chart(chart.context, {
                 type: 'line',
                 data: {
-                    labels: _.map(chartData, function (data) {
-                        return data.completed_at;
-                    }),
+                    labels: yLabels,
                     datasets: [{
                         lineTension: 0,
                         data: _.map(chartData, function (data) {
@@ -82,24 +80,31 @@
                         yAxes: [{
                             ticks: {
                                 min: 0,
-                                autoSkip: false,
                                 callback: function (value, index, values) {
-                                    var keys = _.keys(data)
+                                    var keys = _.keys(data).reverse()
 
                                     return data[keys[index]].completed_at;
                                 }
                             }
                         }],
                         xAxes: [{
-                            display: false,
+                            ticks: {
+                                callback: function (value, index, values) {
+                                    return _.keys(data)[index]
+                                }
+                            }
                         }]
                     },
                     tooltips: {
                         callbacks: {
+                            beforeLabel: function (tooltipItem, data) {
+                                return 'Completed at: '+ data.labels[tooltipItem.index];
+                            },
                             label: function(tooltipItem, data) {
-                                var startAt = $el.data('start-at')
+                                var startAt = $el.data('start-at');
 
-                                return moment(startAt).add(tooltipItem.yLabel, 's').format('h:mm');
+                                // We can safely assume use of index 0
+                                return 'Target completion time: ' + moment(startAt).add(data.datasets[1].data[0], 's').format('h:mm');
                             }
                         }
                     }
