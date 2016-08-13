@@ -83,13 +83,23 @@
                             ticks: {
                                 min: 0,
                                 callback: function (value, index, values) {
-                                    var sortedTimes = _.sortBy(chartKeys, function (key) {
+                                    /*var sortedTimes = _.sortBy(chartKeys, function (key) {
                                         return key.split(' ')[1];
                                     });
 
                                     var time = moment(_.reverse(sortedTimes)[index])
 
-                                    return time.format('HH:ss')
+                                    return time.format('HH:ss')*/
+
+                                    /*return _.reverse_.sortBy(chartData, function (d) {
+                                        return d.completed_at;
+                                    })[index].completed_at;*/
+
+                                    var time = moment();
+                                    time.hours(0);
+                                    time.seconds(0);
+
+                                    return time.add(value, 'seconds').format('HH:mm');
                                 }
                             }
                         }],
@@ -108,7 +118,7 @@
                             },
                             label: function(tooltipItem, data) {
                                 // We can safely assume use of index 0
-                                return 'Target completion time: ' + moment(tooltipItem.xLabel).add(data.datasets[1].data[0], 's').format('HH:mm');
+                                return 'Target completion time: ' + moment(tooltipItem.xLabel).add(data.datasets[1].data[0], 's').format('YYYY-MM-DD HH:mm');
                             }
                         }
                     }
