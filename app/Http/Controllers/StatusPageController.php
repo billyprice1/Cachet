@@ -183,9 +183,7 @@ class StatusPageController extends AbstractApiController
         $actionData = [];
 
         $window = app(WindowFactory::class)->next($action);
-        $dateTime = $this->dates->make($window->start());
-
-        $instance = null;
+        $dateTime = $this->dates->make($window->start(), $action->timezone);
 
         // No more than 30 instances for now.
         if ($instanceCount = $action->instances->count()) {
@@ -197,8 +195,7 @@ class StatusPageController extends AbstractApiController
         }
 
         for ($i = 0; $i < $instanceCount; $i++) {
-            $date = $dateTime->format('Y-m-d H:i').':00';
-            if (!($instance = $action->instances()->where('started_at', $date)->first())) {
+            if (!($instance = $action->instances()->where('started_at', $dateTime->format('Y-m-d H:i:00'))->first())) {
                 $instance = new TimedActionInstance([
                     'timed_action_id' => $action->id,
                     'started_at'      => $dateTime,
@@ -206,8 +203,8 @@ class StatusPageController extends AbstractApiController
             }
 
             $actionData[$dateTime->format('Y-m-d H:i')] = [
-                'time_taken'   => $instance->isCompleted ? $instance->started_at->diffInSeconds($instance->completed_at) : 0,
-                'completed_at' => $instance->isCompleted ? $instance->completed_at->format('H:i') : null,
+                'time_taken'   => $instance->is_completed ? $instance->started_at->diffInSeconds($instance->completed_at) : 0,
+                'completed_at' => $instance->is_completed ? $instance->completed_at->setTimezone($action->timezone)->format('H:i') : null,
             ];
 
             $dateTime->subSeconds($action->window_length);
@@ -216,7 +213,7 @@ class StatusPageController extends AbstractApiController
         ksort($actionData);
 
         return $this->item([
-            'action' => array_except($action->toArray(), 'instances'),
+            'action' => array_except($action->toArray(), 'instances'), // TODO: Format the start_at column with the timeozne.
             'items'  => $actionData,
         ]);
     }

@@ -46,21 +46,23 @@
             }
 
             var chartData = _.values(data);
+            var chartKeys = _.keys(data);
 
             var yLabels = _.map(chartData, function (data) {
                 return data.completed_at;
             });
 
-            console.log(yLabels)
-
             chart.chart = new Chart(chart.context, {
                 type: 'line',
                 data: {
-                    labels: yLabels,
+                    labels: _.keys(chartData),
                     datasets: [{
                         lineTension: 0,
-                        data: _.map(chartData, function (data) {
-                            return data.time_taken;
+                        data: _.map(chartData, function (data, index) {
+                            var startAt = moment(chartKeys[index]);
+                            var completedAt = moment(startAt.format('YYYY-MM-DD')+' '+data.completed_at).subtract();
+
+                            return completedAt.diff(startAt, 'seconds');
                         }),
                         fill: false,
                         backgroundColor: "{{ $theme_metrics }}",
@@ -81,9 +83,13 @@
                             ticks: {
                                 min: 0,
                                 callback: function (value, index, values) {
-                                    var keys = _.keys(data).reverse()
+                                    var sortedTimes = _.sortBy(chartKeys, function (key) {
+                                        return key.split(' ')[1];
+                                    });
 
-                                    return data[keys[index]].completed_at;
+                                    var time = moment(_.reverse(sortedTimes)[index])
+
+                                    return time.format('HH:ss')
                                 }
                             }
                         }],
@@ -98,13 +104,11 @@
                     tooltips: {
                         callbacks: {
                             beforeLabel: function (tooltipItem, data) {
-                                return 'Completed at: '+ data.labels[tooltipItem.index];
+                                return 'Completed at: '+ yLabels[tooltipItem.index];
                             },
                             label: function(tooltipItem, data) {
-                                var startAt = $el.data('start-at');
-
                                 // We can safely assume use of index 0
-                                return 'Target completion time: ' + moment(startAt).add(data.datasets[1].data[0], 's').format('h:mm');
+                                return 'Target completion time: ' + moment(tooltipItem.xLabel).add(data.datasets[1].data[0], 's').format('HH:mm');
                             }
                         }
                     }
