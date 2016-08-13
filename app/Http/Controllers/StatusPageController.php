@@ -12,15 +12,14 @@
 namespace CachetHQ\Cachet\Http\Controllers;
 
 use AltThree\Badger\Facades\Badger;
-use CachetHQ\Cachet\Actions\WindowFactory;
 use CachetHQ\Cachet\Dates\DateFactory;
 use CachetHQ\Cachet\Http\Controllers\Api\AbstractApiController;
 use CachetHQ\Cachet\Models\Component;
 use CachetHQ\Cachet\Models\Incident;
 use CachetHQ\Cachet\Models\Metric;
 use CachetHQ\Cachet\Models\TimedAction;
-use CachetHQ\Cachet\Models\TimedActionInstance;
 use CachetHQ\Cachet\Repositories\Metric\MetricRepository;
+use Carbon\Carbon;
 use Exception;
 use GrahamCampbell\Binput\Facades\Binput;
 use Illuminate\Routing\Controller;
@@ -182,39 +181,20 @@ class StatusPageController extends AbstractApiController
     {
         $actionData = [];
 
-        $window = app(WindowFactory::class)->next($action);
-        $dateTime = $this->dates->make($window->start(), $action->timezone);
+        $instances = $action->instances()->where('started_at', '>=', Carbon::now()->subDays(30))->orderBy('created_at', 'desc')->limit(30)->get();
 
-        // No more than 30 instances for now.
-        if ($instanceCount = $action->instances->count()) {
-            if ($instanceCount > 30) {
-                $instanceCount = 30;
-            }
-        } else {
-            $instanceCount = 0;
-        }
+        $items = [];
 
-        for ($i = 0; $i < $instanceCount; $i++) {
-            if (!($instance = $action->instances()->where('started_at', $dateTime->format('Y-m-d H:i:00'))->first())) {
-                $instance = new TimedActionInstance([
-                    'timed_action_id' => $action->id,
-                    'started_at'      => $dateTime,
-                ]);
-            }
-
-            $actionData[$dateTime->format('Y-m-d H:i')] = [
+        foreach (AutoPresenter::decorate($instances)->reverse() as $instance) {
+            $items[$instance->started_at->format('Y-m-d H:i')] = [
                 'time_taken'   => $instance->is_completed ? $instance->started_at->diffInSeconds($instance->completed_at) : 0,
-                'completed_at' => $instance->is_completed ? $instance->completed_at->setTimezone($action->timezone)->format('H:i') : null,
+                'completed_at' => $instance->is_completed ? $instance->completed_at->format('H:i') : null,
             ];
-
-            $dateTime->subSeconds($action->window_length);
         }
-
-        ksort($actionData);
 
         return $this->item([
-            'action' => array_except($action->toArray(), 'instances'), // TODO: Format the start_at column with the timeozne.
-            'items'  => $actionData,
+            'action' => array_except(AutoPresenter::decorate($action)->toArray(), 'instances'),
+            'items'  => $items,
         ]);
     }
 
