@@ -62,7 +62,7 @@ class TimedActionInstancePresenter extends BasePresenter implements Arrayable
      *
      * @return string
      */
-    public function target_completion_at()
+    public function target_completed_at()
     {
         $endAt = $this->wrappedObject->started_at->addSeconds($this->wrappedObject->action->window_lenth);
         $targettedAt = $endAt->addSeconds($this->wrappedObject->completion_latency);
@@ -98,7 +98,7 @@ class TimedActionInstancePresenter extends BasePresenter implements Arrayable
             'updated_at'              => $this->updated_at(),
             'ended_at'                => $this->ended_at(),
             'completed_at'            => $this->completed_at(),
-            'target_completion_at'    => $this->target_completion_at(),
+            'target_completed_at'     => $this->target_completed_at(),
         ]);
     }
 }
