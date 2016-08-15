@@ -188,7 +188,7 @@ class StatusPageController extends AbstractApiController
                 'started_at'           => $instance->started_at->format('Y-m-d H:i'),
                 'ended_at'             => $instance->ended_at->format('Y-m-d H:i'),
                 'completed_at'         => $instance->is_completed ? $instance->completed_at->format('Y-m-d H:i') : null,
-                'target_completed_at' => $instance->target_completed_at->format('Y-m-d H:i'),
+                'target_completed_at'  => $instance->target_completed_at->format('Y-m-d H:i'),
             ];
         }
 
