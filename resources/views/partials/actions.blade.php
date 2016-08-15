@@ -57,6 +57,7 @@
                 data: {
                     labels: _.keys(chartData),
                     datasets: [{
+                        label: "Associated time period start time",
                         lineTension: 0,
                         data: _.map(chartData, function (data, index) {
                             var startAt = moment(chartKeys[index]);
@@ -108,6 +109,10 @@
                                 callback: function (value, index, values) {
                                     return _.keys(data)[index]
                                 }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Associated time period start time',
                             }
                         }]
                     },
