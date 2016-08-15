@@ -61,7 +61,7 @@
                         lineTension: 0,
                         data: _.map(chartData, function (data, index) {
                             var startAt = moment(chartKeys[index]);
-                            var completedAt = moment(startAt.format('YYYY-MM-DD')+' '+data.completed_at).subtract();
+                            var completedAt = moment(startAt.format('YYYY-MM-DD')+' '+data.completed_at.split(' ')[1]).subtract();
 
                             return completedAt.diff(startAt, 'seconds');
                         }),
@@ -84,18 +84,6 @@
                             ticks: {
                                 min: 0,
                                 callback: function (value, index, values) {
-                                    /*var sortedTimes = _.sortBy(chartKeys, function (key) {
-                                        return key.split(' ')[1];
-                                    });
-
-                                    var time = moment(_.reverse(sortedTimes)[index])
-
-                                    return time.format('HH:ss')*/
-
-                                    /*return _.reverse_.sortBy(chartData, function (d) {
-                                        return d.completed_at;
-                                    })[index].completed_at;*/
-
                                     var time = moment();
                                     time.hours(0);
                                     time.seconds(0);
